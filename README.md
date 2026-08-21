@@ -5,7 +5,7 @@
 adblock, fingerprint spoofing). Born inside the HereticArch swarm; extracted
 as a standalone product.
 
-> Status: **2.2.0-beta.1** — feature-honest beta. The core browser is daily-driver
+> Status: **2.2.0-beta.4 (public beta)** — feature-honest beta. The core browser is daily-driver
 > solid; the long tail of tools varies (see matrix). Auto-update is wired from
 > this version on.
 
@@ -44,8 +44,9 @@ AI features expect a local OpenAI-compatible endpoint (see matrix).
 | Noosphere search | ✓ via SearXNG `:8888` |
 | Mens semantic context | ⚠ optional, needs Ollama `:11434` |
 
-Endpoints are not yet configurable in-UI (planned: settings screen with
-health checks + graceful offline states).
+AI endpoint (host / model / provider) is configurable in Settings and
+persists across restarts. Defaults target a local llama-swap / Ollama;
+any OpenAI-compatible endpoint works.
 
 ### Tools — 60+ panels, varying depth
 | Tier | Tools |

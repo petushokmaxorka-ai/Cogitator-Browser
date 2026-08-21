@@ -1,6 +1,6 @@
 {
   "name": "cogitator-browser",
-  "version": "2.2.0-beta.3",
+  "version": "2.2.0-beta.4",
   "description": "COGITATOR BROWSER — Dark Mechanicus AI Browser with local Ollama",
   "main": "./out/main/index.js",
   "author": "Heretic OS",
@@ -109,5 +109,6 @@
       ],
       "icon": "resources/icon.png"
     }
-  }
+  },
+  "license": "MIT"
 }

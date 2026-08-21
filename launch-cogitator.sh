@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-exec /home/heretic/heretic-os/cogitator-browser/resources/launch-cogitator.sh "$@"
+# COGITATOR BROWSER — repo-root launcher wrapper (path-independent)
+exec "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/resources/launch-cogitator.sh" "$@"
