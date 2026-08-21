@@ -24,6 +24,7 @@ import {
 import { sessionManager } from './session-manager';
 import { TorrentManager } from './torrent-manager';
 import { initUpdater } from './updater';
+import { loadLlmConfig, saveLlmConfig } from './llm-config-store';
 import { EmailManager } from './email-manager';
 import { PiPManager } from './pip-manager';
 import { SysmonManager, runSpeedTest } from './sysmon-manager';
@@ -208,6 +209,13 @@ function renderLoadErrorHtml(target: string, code: string, desc: string): string
 let mainWindow: BrowserWindow | null = null;
 const tabManager = new TabManager();
 const ollamaBridge = new OllamaBridge();
+// Restore the persisted AI endpoint (host/model/provider) — without this
+// the Settings panel config was memory-only and lost on every relaunch.
+const savedLlmConfig = loadLlmConfig();
+if (savedLlmConfig) {
+  ollamaBridge.setConfig(savedLlmConfig);
+  console.log(`[LLM] restored endpoint: ${savedLlmConfig.provider ?? 'llama-server'} @ ${savedLlmConfig.host}`);
+}
 const mensBridge = new MensBridge();
 const vpnBridge = new VPNBridge();
 const adBlocker = getAdBlockerEngine();
@@ -698,6 +706,7 @@ ipcMain.handle(IPC_CHANNELS.OLLAMA_GET_CONFIG, () => {
 
 ipcMain.handle(IPC_CHANNELS.OLLAMA_SET_CONFIG, (_, config) => {
   ollamaBridge.setConfig(config);
+  saveLlmConfig(ollamaBridge.getConfig());
 });
 
 ipcMain.handle(IPC_CHANNELS.OLLAMA_ABORT, () => {
