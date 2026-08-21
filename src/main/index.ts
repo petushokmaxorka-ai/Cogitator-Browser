@@ -23,6 +23,7 @@ import {
 } from './privacy-engine';
 import { sessionManager } from './session-manager';
 import { TorrentManager } from './torrent-manager';
+import { initUpdater } from './updater';
 import { EmailManager } from './email-manager';
 import { PiPManager } from './pip-manager';
 import { SysmonManager, runSpeedTest } from './sysmon-manager';
@@ -389,6 +390,9 @@ app.whenReady().then(async () => {
   setSplashProgress(55);
   createWindow();
   setSplashProgress(92);
+
+  // ═══ Auto-update: GitHub Releases feed, startup + 6h ═══
+  initUpdater();
 
   // Session restore — proxy CLI is set before any navigation
   setTimeout(() => {

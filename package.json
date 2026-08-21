@@ -1,6 +1,6 @@
 {
   "name": "cogitator-browser",
-  "version": "2.1.0",
+  "version": "2.2.0-beta.1",
   "description": "COGITATOR BROWSER — Dark Mechanicus AI Browser with local Ollama",
   "main": "./out/main/index.js",
   "author": "Heretic OS",
@@ -22,7 +22,7 @@
     "build:linux": "npm run build && electron-builder --linux"
   },
   "dependencies": {
-    "@cliqz/adblocker-electron": "^1.27.11",
+    "@cliqz/adblocker-electron": "^1.34.0",
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
     "@types/imap": "^0.8.43",
@@ -52,7 +52,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
-    "electron": "^28.0.0",
+    "electron": "^43.4.1",
     "electron-builder": "^24.9.1",
     "electron-vite": "^2.3.0",
     "eslint": "^8.57.0",
@@ -70,6 +70,13 @@
     "productName": "CogitatorBrowser",
     "appId": "dev.heretic-os.cogitator",
     "asar": false,
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "petushokmaxorka-ai",
+        "repo": "Cogitator-Browser"
+      }
+    ],
     "directories": {
       "output": "release"
     },

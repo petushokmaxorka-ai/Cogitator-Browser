@@ -1,6 +1,6 @@
 // ═══ SSH CLIENT ═══
 // Secure Shell terminal interface — Machine Spirit remote communion
-// TODO: integrate node-ssh for production use
+// Backend: real ssh CLI via IPC (ssh-manager.ts, batch commands)
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import {

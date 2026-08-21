@@ -1,6 +1,6 @@
 // ═══ SQLITE BROWSER ═══
 // Database schema viewer and SQL query executor — Data Archive Interface
-// TODO: integrate better-sqlite3 for production use
+// Backend: real sqlite3 CLI via IPC (sqlite-manager.ts, no native modules)
 
 import { useState, useCallback, useRef } from 'react';
 import {

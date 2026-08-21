@@ -676,4 +676,8 @@ export const IPC_CHANNELS = {
   OMNIBOX_WHOIS: 'omnibox:whois',
   OMNIBOX_TIME: 'omnibox:time',
   OMNIBOX_DEFINE: 'omnibox:define',
+
+  // ═══ Auto-update (electron-updater) ══════════════════════
+  APP_UPDATE_STATUS: 'app:update-status',
+  APP_UPDATE_RESTART: 'app:update-restart',
 } as const;

@@ -1,6 +1,6 @@
 // ═══ PORT SCANNER ═══
 // Network port scanner — nmap-style interface for the Omnissiah
-// TODO: in production use net.connect for real scanning
+// Backend: real TCP connect scan via IPC (network-tools.ts, net.connect)
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import {

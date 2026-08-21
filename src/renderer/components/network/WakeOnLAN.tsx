@@ -1,6 +1,6 @@
 // ═══ WAKE-ON-LAN ═══
 // Magic packet sender — Rouse the Machine Spirits from slumber
-// TODO: integrate dgram for production UDP broadcast
+// Backend: real UDP broadcast via IPC (network-tools.ts, dgram socket)
 
 import { useState, useCallback, useEffect } from 'react';
 import {

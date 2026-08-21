@@ -1,6 +1,6 @@
 // ═══ GIT CLIENT ═══
 // Git repository interface — Sanctify thy code commits in the name of the Omnissiah
-// TODO: integrate simple-git or nodegit via IPC
+// Backend: real git CLI via IPC (git-manager.ts, no shell=True)
 // Dark Mechanicus: #000000, #FF0000, #C8A84B, #00BFBF, monospace
 
 import { useState, useCallback, useEffect } from 'react';
