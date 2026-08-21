@@ -110,7 +110,6 @@ const electronAPI = {
   // ── Page ──────────────────────────────────────────────
   page: {
     getInfo: () => ipcRenderer.invoke(IPC_CHANNELS.PAGE_GET_INFO),
-    getContent: () => ipcRenderer.invoke(IPC_CHANNELS.PAGE_GET_CONTENT),
   },
 
   // ── Reader ────────────────────────────────────────────

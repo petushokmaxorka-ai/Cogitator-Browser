@@ -1,4 +1,4 @@
-import type { BrowserView, BrowserWindow } from 'electron';
+import type { WebContentsView, BrowserWindow } from 'electron';
 
 export function isDestroyedError(err: unknown): boolean {
   const msg = err instanceof Error ? err.message : String(err);
@@ -14,7 +14,7 @@ export function isWindowLive(win: BrowserWindow | null): win is BrowserWindow {
   }
 }
 
-export function isViewLive(view: BrowserView): boolean {
+export function isViewLive(view: WebContentsView): boolean {
   try {
     return !view.webContents.isDestroyed();
   } catch {
@@ -22,11 +22,14 @@ export function isViewLive(view: BrowserView): boolean {
   }
 }
 
-export function safeRemoveBrowserView(win: BrowserWindow, view: BrowserView): void {
+// NOTE: names kept for the launcher's stale-build check (greps the compiled
+// output for this symbol). BrowserView attach/detach APIs are deprecated
+// since Electron 30 — these wrap the WebContentsView contentView API.
+export function safeRemoveBrowserView(win: BrowserWindow, view: WebContentsView): void {
   if (!isWindowLive(win) || !isViewLive(view)) return;
   try {
-    if (win.getBrowserViews().includes(view)) {
-      win.removeBrowserView(view);
+    if (win.contentView.children.includes(view)) {
+      win.contentView.removeChildView(view);
     }
   } catch (err) {
     if (!isDestroyedError(err)) {
@@ -35,15 +38,11 @@ export function safeRemoveBrowserView(win: BrowserWindow, view: BrowserView): vo
   }
 }
 
-export function safeAddBrowserView(win: BrowserWindow, view: BrowserView): void {
+export function safeAddBrowserView(win: BrowserWindow, view: WebContentsView): void {
   if (!isWindowLive(win) || !isViewLive(view)) return;
   try {
-    const attached = win.getBrowserViews();
-    if (!attached.includes(view)) {
-      win.addBrowserView(view);
-    }
-    if (typeof win.setTopBrowserView === 'function') {
-      win.setTopBrowserView(view);
+    if (!win.contentView.children.includes(view)) {
+      win.contentView.addChildView(view);
     }
   } catch (err) {
     if (!isDestroyedError(err)) {

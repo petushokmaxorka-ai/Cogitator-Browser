@@ -446,7 +446,6 @@ export const IPC_CHANNELS = {
 
   // Page
   PAGE_GET_INFO: 'page:get-info',
-  PAGE_GET_CONTENT: 'page:get-content',
 
   // Window
   WINDOW_MINIMIZE: 'window:minimize',
@@ -497,12 +496,10 @@ export const IPC_CHANNELS = {
   VAULT_DELETE_CARD: 'vault:delete-card',
 
   // Reader Mode
-  READER_EXTRACT: 'reader:extract',
   READER_DETECT: 'reader:detect',
   READER_GET_HTML: 'reader:get-html',
 
   // Translation
-  TRANSLATE_TEXT: 'translate:text',
 
   // Session
   SESSION_SAVE: 'session:save',
@@ -511,9 +508,6 @@ export const IPC_CHANNELS = {
   SESSION_DELETE: 'session:delete',
 
   // Site Settings
-  SITE_GET_SETTINGS: 'site:get-settings',
-  SITE_SET_SETTINGS: 'site:set-settings',
-  SITE_CLEAR_DATA: 'site:clear-data',
 
   // ═══ Privacy Engine ═══════════════════════════════════
   PRIVACY_GET_CONFIG: 'privacy:get-config',
@@ -589,8 +583,6 @@ export const IPC_CHANNELS = {
   PIP_GET_STATE: 'pip:get-state',
   PIP_CLOSE: 'pip:close',
   PIP_STATE_CHANGE: 'pip:state-change',
-  PIP_LOAD: 'pip:load',
-  PIP_SYNC: 'pip:sync',
   PIP_CONTROL: 'pip:control',
 
   // ═══ Email Client ═══════════════════════════════════════

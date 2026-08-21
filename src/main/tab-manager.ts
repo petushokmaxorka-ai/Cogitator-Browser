@@ -3,7 +3,7 @@
 // Manages WebContentsView instances, their bounds, and lifecycle.
 // ═══════════════════════════════════════════════════════════
 
-import { BrowserView, BrowserWindow, Menu, clipboard, shell } from 'electron';
+import { WebContentsView, BrowserWindow, Menu, clipboard, shell } from 'electron';
 import { join } from 'path';
 import { randomUUID } from 'crypto';
 import type { Tab } from '../shared/types';
@@ -32,7 +32,7 @@ import {
   safeRemoveBrowserView,
 } from './electron-guards';
 
-function applyDesktopUserAgent(view: BrowserView): void {
+function applyDesktopUserAgent(view: WebContentsView): void {
   try {
     view.webContents.setUserAgent(DESKTOP_CHROME_UA);
   } catch (err) {
@@ -47,7 +47,7 @@ function applyDesktopUserAgent(view: BrowserView): void {
 // ── TabEntry Interface ────────────────────────────────────
 interface TabEntry {
   tab: Tab;
-  view: BrowserView;
+  view: WebContentsView;
   listeners: { event: string; handler: (...args: any[]) => void }[];
   transientRetries: number;
 }
@@ -212,7 +212,7 @@ export class TabManager {
   // ── Tab Lifecycle ───────────────────────────────────────
 
   createTab(url = 'cogitator://start'): Tab {
-    const view = new BrowserView({
+    const view = new WebContentsView({
       webPreferences: {
         sandbox: true,
         contextIsolation: true,
