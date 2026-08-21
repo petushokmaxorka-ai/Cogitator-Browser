@@ -1,6 +1,6 @@
 {
   "name": "cogitator-browser",
-  "version": "2.2.0-beta.1",
+  "version": "2.2.0-beta.2",
   "description": "COGITATOR BROWSER — Dark Mechanicus AI Browser with local Ollama",
   "main": "./out/main/index.js",
   "author": "Heretic OS",
@@ -93,18 +93,21 @@
           ]
         }
       ],
-      "category": "Network"
+      "category": "Network",
+      "icon": "resources/icon.png"
     },
     "mac": {
       "target": [
         "dmg"
       ],
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "icon": "resources/icon.png"
     },
     "win": {
       "target": [
         "portable"
-      ]
+      ],
+      "icon": "resources/icon.png"
     }
   }
 }
