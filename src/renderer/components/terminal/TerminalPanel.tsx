@@ -72,12 +72,12 @@ function simpleHash(str: string, algorithm: string): string {
 
 // ── ASCII Art ───────────────────────────────────────────────
 
-const NEOFETCH_ART = `    ⚙⚙⚙⚙⚙⚙
-   ⚙  ◉◉◉  ⚙
-  ⚙  ◉   ◉  ⚙
-  ⚙  ◉   ◉  ⚙
-   ⚙  ◉◉◉  ⚙
-    ⚙⚙⚙⚙⚙⚙
+const NEOFETCH_ART = `    ◆◆◆◆◆◆
+   ◆  ◉◉◉  ◆
+  ◆  ◉   ◉  ◆
+  ◆  ◉   ◉  ◆
+   ◆  ◉◉◉  ◆
+    ◆◆◆◆◆◆
 ═══════════════════
   OS: Heretic OS
   Kernel: Omnissiah

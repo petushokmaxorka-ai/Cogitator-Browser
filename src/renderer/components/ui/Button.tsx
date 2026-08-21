@@ -77,7 +77,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {isLoading ? (
-          <span className="loading-cog mr-1">◈</span>
+          <span className="loading-cog mr-1">◆</span>
         ) : Icon ? (
           <Icon size={size === 'sm' ? 12 : size === 'md' ? 14 : 16} strokeWidth={1.5} />
         ) : null}

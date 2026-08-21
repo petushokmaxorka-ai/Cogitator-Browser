@@ -293,7 +293,7 @@ export default function GraphQLPlayground(): JSX.Element {
             textShadow: '0 0 8px rgba(200, 168, 75, 0.3)',
           }}
         >
-          ⚙ GraphQL Playground
+          ◆ GraphQL Playground
         </div>
 
         {/* Endpoint */}

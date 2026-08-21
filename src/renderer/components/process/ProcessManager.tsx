@@ -239,7 +239,7 @@ export function ProcessManager() {
               e.currentTarget.style.color = 'var(--parchment-dim)';
             }}
           >
-            <span>⚙ DEMO</span>
+            <span>◆ DEMO</span>
           </button>
 
           {/* Refresh button */}

@@ -311,7 +311,7 @@ export default function Journal() {
             <Download size={12} />
           </button>
           <button onClick={handleAIAnalyze} disabled={aiState === 'loading' || entries.length === 0} style={{ ...btnBase, borderColor: 'var(--cogitator-gold)', color: 'var(--cogitator-gold)', opacity: aiState === 'loading' ? 0.6 : 1 }}>
-            {aiState === 'loading' ? <span className="loading-cog">⚙</span> : <Sparkles size={12} />}
+            {aiState === 'loading' ? <span className="loading-cog">◆</span> : <Sparkles size={12} />}
             {aiState === 'loading' ? ' ANALYZING...' : ' ANALYZE'}
           </button>
           <button

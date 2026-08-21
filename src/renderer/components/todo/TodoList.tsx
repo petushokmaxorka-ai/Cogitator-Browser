@@ -274,7 +274,7 @@ export default function TodoList() {
           >
             {aiState === 'loading' ? (
               <>
-                <span className="loading-cog">⚙</span> ANALYZING...
+                <span className="loading-cog">◆</span> ANALYZING...
               </>
             ) : (
               <>

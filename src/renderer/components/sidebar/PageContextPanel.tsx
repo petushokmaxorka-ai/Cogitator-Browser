@@ -555,7 +555,7 @@ ${pageInfo.content?.slice(0, 8000) || 'No content extracted'}
           className="mech-divider"
           style={{ fontSize: 'var(--font-size-xs)' }}
         >
-          <span style={{ color: 'var(--steel-gray)' }}>◈</span>
+          <span style={{ color: 'var(--steel-gray)' }}>◆</span>
         </div>
       )}
 

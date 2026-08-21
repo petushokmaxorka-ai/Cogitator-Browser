@@ -239,7 +239,7 @@ function AlarmPanel(): JSX.Element {
           // Browser notification if permitted.
           try {
             if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-              new Notification('⚙ Alarm', { body: a.label || a.time });
+              new Notification('◆ Alarm', { body: a.label || a.time });
             }
           } catch { /* ignore */ }
         }
@@ -411,7 +411,7 @@ function TimerPanel(): JSX.Element {
         setFinished(true);
         try {
           if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-            new Notification('⚙ Timer', { body: 'Countdown complete' });
+            new Notification('◆ Timer', { body: 'Countdown complete' });
           }
         } catch { /* ignore */ }
         clearInterval(id);

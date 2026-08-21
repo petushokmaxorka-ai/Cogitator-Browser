@@ -94,7 +94,7 @@ const WebViewPane: React.FC<WebViewPaneProps> = ({ tabId, paneId }) => {
         style={{ backgroundColor: 'var(--void-black)' }}
       >
         <div className="flex-1 flex items-center justify-center flex-col gap-3">
-          <span className="text-[var(--steel-gray)] text-2xl">◈</span>
+          <span className="text-[var(--steel-gray)] text-2xl">◆</span>
           <span className="text-[var(--text-muted)] font-mono text-[11px] uppercase tracking-widest">
             No Secondary Tab
           </span>
@@ -208,7 +208,7 @@ const SplitView: React.FC<SplitViewProps> = ({
         <div className="flex items-center justify-between h-7 px-2 bg-[var(--iron-dark)] border-b border-[var(--iron-gray)] flex-shrink-0">
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <span className="text-[9px] font-mono text-[var(--cogitator-gold)] uppercase tracking-wider flex-shrink-0">
-              ◈ PRIMARY
+              ◆ PRIMARY
             </span>
             <span className="text-[9px] font-mono text-[var(--text-muted)] truncate">
               {primaryTabId ? `Tab: ${primaryTabId.slice(0, 8)}...` : 'No tab'}
@@ -270,7 +270,7 @@ const SplitView: React.FC<SplitViewProps> = ({
         <div className="flex items-center justify-between h-7 px-2 bg-[var(--iron-dark)] border-b border-[var(--iron-gray)] flex-shrink-0">
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <span className="text-[9px] font-mono text-[var(--noosphere-cyan)] uppercase tracking-wider flex-shrink-0">
-              ◈ SECONDARY
+              ◆ SECONDARY
             </span>
             <span className="text-[9px] font-mono text-[var(--text-muted)] truncate">
               {secondaryTabId ? `Tab: ${secondaryTabId.slice(0, 8)}...` : 'No tab'}

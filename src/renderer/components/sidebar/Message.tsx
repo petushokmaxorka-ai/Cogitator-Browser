@@ -305,7 +305,7 @@ export default function Message({ message, isLast }: MessageProps) {
         }}
       >
         {isAssistant ? (
-          <span style={{ color: 'var(--omnissiah-red)' }}>⚙</span>
+          <span style={{ color: 'var(--omnissiah-red)' }}>◆</span>
         ) : (
           <span style={{ color: 'var(--noosphere-cyan)' }}>◉</span>
         )}

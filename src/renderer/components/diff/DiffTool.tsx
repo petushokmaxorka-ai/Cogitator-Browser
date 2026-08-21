@@ -454,7 +454,7 @@ export default function DiffTool() {
               zIndex: 2,
             }}
           >
-            ⚙ Unified Diff
+            ◆ Unified Diff
           </div>
 
           {/* Diff Lines */}

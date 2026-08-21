@@ -241,7 +241,7 @@ export default function RegexTester() {
             gap: '6px',
           }}
         >
-          <span>⚙</span>
+          <span>◆</span>
           <span>Regex Pattern</span>
           {error && (
             <span style={{ color: '#FF0000', marginLeft: '8px' }}>✗ {error}</span>
@@ -341,7 +341,7 @@ export default function RegexTester() {
             marginBottom: '8px',
           }}
         >
-          ⚙ Test String
+          ◆ Test String
         </div>
         <div
           style={{
@@ -458,7 +458,7 @@ export default function RegexTester() {
               marginBottom: '4px',
             }}
           >
-            ⚙ Replace Result
+            ◆ Replace Result
           </div>
           <pre
             style={{
@@ -500,7 +500,7 @@ export default function RegexTester() {
               textTransform: 'uppercase',
             }}
           >
-            ⚙ Matches ({matches.length})
+            ◆ Matches ({matches.length})
           </span>
           {matches.length > 0 && (
             <button
@@ -607,7 +607,7 @@ export default function RegexTester() {
             marginBottom: '8px',
           }}
         >
-          ⚙ Cheat Sheet
+          ◆ Cheat Sheet
         </div>
         <div
           style={{

@@ -34,13 +34,13 @@ const DEFAULT_HERETIC: QuickLink[] = [
   { id: 'forge', title: 'Heretic Forge', url: 'http://127.0.0.1:9091', favicon: '⚒' },
   { id: 'dashboard', title: 'Dashboard', url: 'http://127.0.0.1:7777', favicon: '' },
   { id: 'noosphere', title: 'Noosphere', url: 'cogitator://noosphere', favicon: '' },
-  { id: 'mens', title: 'Mens Machinae', url: 'http://127.0.0.1:8000', favicon: '⚙' },
+  { id: 'mens', title: 'Mens Machinae', url: 'http://127.0.0.1:8000', favicon: '◆' },
 ];
 
 const DEFAULT_FORGE: QuickLink[] = [
   { id: 'forge-web', title: 'Forge Web UI', url: 'http://127.0.0.1:9091', favicon: '⚒' },
   { id: 'forge-llm', title: 'LLM Swarm', url: 'http://127.0.0.1:11436/v1/models', favicon: '☉' },
-  { id: 'forge-tui', title: 'Forge TUI', url: 'cogitator://forge-tui', favicon: '⚙' },
+  { id: 'forge-tui', title: 'Forge TUI', url: 'cogitator://forge-tui', favicon: '◆' },
 ];
 
 const DEFAULT_WEB_FORGE: QuickLink[] = [

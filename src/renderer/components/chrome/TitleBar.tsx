@@ -171,7 +171,6 @@ const TitleBar: React.FC = () => {
             }}
           />
         )}
-        <span className="cog-mark" title="cogitator" aria-hidden="true"><span>⚙</span></span>
         <span className="live-led" title="cogitator online" />
         <span className="text-[var(--cogitator-gold-bright,#e8c87e)] text-[11px] font-mono tracking-[0.2em] uppercase text-glow-gold">
           COGITATOR BROWSER

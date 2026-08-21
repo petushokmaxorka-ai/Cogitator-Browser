@@ -199,7 +199,7 @@ function renderLoadErrorHtml(target: string, code: string, desc: string): string
   code { color:#ff4444; }
   a { color:#c8a84b; }
 </style></head><body><div class="panel">
-  <h1>⚙ CONNECTION FAILED</h1>
+  <h1>◆ CONNECTION FAILED</h1>
   <p>Could not load <a href="${safeUrl}">${safeUrl}</a></p>
   <p><code>${safeDesc} (${safeCode})</code></p>
   <p>Check network / VPN (FlClash TUN or system proxy). Try reload (Ctrl+R).</p>

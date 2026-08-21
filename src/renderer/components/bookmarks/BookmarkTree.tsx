@@ -167,7 +167,7 @@ const getDefaultTree = (): BookmarkTreeItem[] => [
   {
     id: 'root-system',
     type: 'folder',
-    title: '⚙ System',
+    title: '◆ System',
     isOpen: false,
     children: [
       {
@@ -932,7 +932,7 @@ const BookmarkTree: React.FC<BookmarkTreeProps> = ({
 
           {tree.length === 0 && (
             <div className="flex flex-col items-center justify-center py-8 gap-2">
-              <span className="text-[var(--steel-gray)] text-lg">◈</span>
+              <span className="text-[var(--steel-gray)] text-lg">◆</span>
               <span className="text-[var(--text-muted)] font-mono text-[10px] uppercase tracking-wider">
                 No bookmarks
               </span>

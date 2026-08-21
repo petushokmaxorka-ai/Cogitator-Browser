@@ -596,7 +596,7 @@ export function EmailClient() {
               textTransform: 'uppercase' as const,
             }}
           >
-            ⚙ DEMO
+            ◆ DEMO
           </button>
         )}
 

@@ -4,7 +4,7 @@
 // Where the sacred addresses of the Machine God are entered.
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Globe, Cog, Star, BookOpen, Copy, Check, Mic, MicOff, Columns, Bookmark, Camera, PictureInPicture } from 'lucide-react';
+import { Globe, Sparkles, Star, BookOpen, Copy, Check, Mic, MicOff, Columns, Bookmark, Camera, PictureInPicture } from 'lucide-react';
 import { useQuickAnswer, type QuickAnswer } from '../../hooks/useQuickAnswer';
 import Tooltip from '../ui/Tooltip';
 
@@ -604,16 +604,7 @@ const AddressBar: React.FC<AddressBarProps> = ({
               : 'text-[var(--parchment)] hover:text-[var(--omnissiah-red)] hover:bg-[rgba(255,0,0,0.05)]',
           ].join(' ')}
         >
-          <Cog
-            size={12}
-            strokeWidth={1.5}
-            className={sidebarOpen ? 'animate-spin' : ''}
-            style={
-              sidebarOpen
-                ? { animationDuration: '3s' }
-                : undefined
-            }
-          />
+          <Sparkles size={12} strokeWidth={1.5} />
           <span>AI</span>
         </button>
       </Tooltip>

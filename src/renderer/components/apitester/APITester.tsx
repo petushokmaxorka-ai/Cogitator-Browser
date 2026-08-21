@@ -328,7 +328,7 @@ export default function APITester() {
             marginBottom: '8px',
           }}
         >
-          ⚙ DATA INQUISITOR
+          ◆ DATA INQUISITOR
         </div>
         <div
           style={{

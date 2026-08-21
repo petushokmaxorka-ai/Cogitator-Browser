@@ -1157,7 +1157,7 @@ export default function CodeEditor() {
               gap: '6px',
             }}
           >
-            <span>⚙ Explorer</span>
+            <span>◆ Explorer</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               {gitInfo && (
                 <span
@@ -1548,7 +1548,7 @@ export default function CodeEditor() {
                   justifyContent: 'space-between',
                 }}
               >
-                <span>⚙ Output</span>
+                <span>◆ Output</span>
                 <button
                   onClick={() => setRunOutput(null)}
                   style={{

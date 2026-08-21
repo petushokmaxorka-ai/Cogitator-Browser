@@ -252,7 +252,7 @@ export default function WebSocketTester(): JSX.Element {
             textShadow: '0 0 8px rgba(200, 168, 75, 0.3)',
           }}
         >
-          ⚙ WebSocket Tester
+          ◆ WebSocket Tester
         </div>
 
         {/* URL Input */}

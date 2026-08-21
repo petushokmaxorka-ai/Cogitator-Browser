@@ -498,7 +498,7 @@ export const VaultPanel: React.FC = () => {
             e.currentTarget.style.boxShadow = 'none';
           }}
         >
-          {isLoading ? '◈ Unlocking...' : 'UNLOCK'}
+          {isLoading ? '◆ Unlocking...' : 'UNLOCK'}
         </button>
 
         {/* Hint */}
@@ -697,7 +697,7 @@ export const VaultPanel: React.FC = () => {
             e.currentTarget.style.boxShadow = 'none';
           }}
         >
-          {isLoading ? '◈ Creating...' : 'CREATE VAULT'}
+          {isLoading ? '◆ Creating...' : 'CREATE VAULT'}
         </button>
 
         <div

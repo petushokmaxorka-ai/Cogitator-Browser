@@ -97,11 +97,9 @@ const TabItem: React.FC<TabItemProps> = ({ tab, isActive, onSwitch, onClose, onC
       {/* Tab title */}
       <span className="flex-1 truncate">{displayTitle}</span>
 
-      {/* Loading indicator */}
+      {/* Loading indicator — CSS spinner, no font glyph (tofu-proof) */}
       {tab.isLoading && (
-        <span className="loading-cog text-[var(--omnissiah-red)] text-[10px] flex-shrink-0">
-          ◈
-        </span>
+        <span className="inline-block h-2 w-2 flex-shrink-0 rounded-full border border-[var(--omnissiah-red)] border-t-transparent animate-spin" />
       )}
 
       {/* Close button — appears on hover or when active */}
