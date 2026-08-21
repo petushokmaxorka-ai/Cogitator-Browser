@@ -112,8 +112,8 @@ function initDarkMode(): void {
   // including dark local dashboards that do not need DarkReader reprocessing.
   injectCustomCSS();
 
-  if (blocked) {
-    console.log('[Cogitator Preload] Skipping DarkReader for', hostname);
+  if (blocked || location.protocol === 'cogitator:') {
+    console.log('[Cogitator Preload] Skipping DarkReader for', hostname || location.protocol);
     return;
   }
 

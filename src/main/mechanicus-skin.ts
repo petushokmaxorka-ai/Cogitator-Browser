@@ -7,9 +7,12 @@ import { NOOSPHERE_PAGE_BACKGROUND } from '../shared/mechanicus-background';
 
 export { NOOSPHERE_PAGE_BACKGROUND };
 
-/** Desktop Chrome UA — avoids YouTube mobile / Electron “small window” layout */
+/** Desktop Chrome UA — avoids YouTube mobile / Electron “small window” layout.
+ *  Version is taken from the real Chromium build so the UA string matches
+ *  Sec-CH-UA client hints (static "Chrome/131" vs engine 137 makes Google
+ *  login flag the browser as insecure). */
 export const DESKTOP_CHROME_UA =
-  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+  `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${process.versions.chrome} Safari/537.36`;
 
 const DARK_READER_CONFIG = {
   brightness: 100,

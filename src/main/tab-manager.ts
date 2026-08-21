@@ -217,6 +217,8 @@ export class TabManager {
         sandbox: true,
         contextIsolation: true,
         nodeIntegration: false,
+        // Media/timers keep running when the window is minimized (players)
+        backgroundThrottling: false,
         // Dark Reader + Mechanicus accents on external sites (see browser-preload.ts)
         preload: join(__dirname, '../preload/browser.js'),
       },

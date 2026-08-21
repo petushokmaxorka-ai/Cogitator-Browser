@@ -251,6 +251,8 @@ function createWindow(): void {
       sandbox: true,
       contextIsolation: true,
       nodeIntegration: false,
+      // Media/timers keep running when the window is minimized (players)
+      backgroundThrottling: false,
     },
   });
 

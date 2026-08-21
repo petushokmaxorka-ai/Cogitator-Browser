@@ -3,7 +3,7 @@
 // direct: TUN-only, no browser proxy. system/pac: opt-in.
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { createConnection } from 'net';
+import { createConnection, request as httpRequest } from 'http';
 import { homedir } from 'os';
 import { join } from 'path';
 import type { Session } from 'electron';
@@ -98,6 +98,46 @@ async function rulesReachable(candidate: { rules: string; ports: number[] }): Pr
     if (await portOpen('127.0.0.1', port)) return true;
   }
   return false;
+}
+
+/** A listening port is not a working tunnel: a dead xray/clash egress kills
+ *  EVERY site while the port stays open. Probe real egress through the
+ *  candidate's http-mixed port (generate_204) before trusting it. */
+function httpEgressAlive(port: number, timeoutMs = 4000): Promise<boolean> {
+  return new Promise((resolve) => {
+    const req = httpRequest(
+      {
+        host: '127.0.0.1',
+        port,
+        path: 'http://www.gstatic.com/generate_204',
+        method: 'GET',
+        headers: { Host: 'www.gstatic.com' },
+        timeout: timeoutMs,
+      },
+      (res) => {
+        res.resume();
+        resolve(!!res.statusCode && res.statusCode > 0 && res.statusCode < 500);
+      },
+    );
+    req.on('timeout', () => {
+      req.destroy();
+      resolve(false);
+    });
+    req.on('error', () => resolve(false));
+    req.end();
+  });
+}
+
+async function egressAlive(candidate: { label: string; rules: string }): Promise<boolean> {
+  const httpMatch = candidate.rules.match(/http=127\.0\.0\.1:(\d+)/);
+  if (!httpMatch) return true; // socks-only profile — no cheap probe, trust it
+  const ok = await httpEgressAlive(Number(httpMatch[1]));
+  if (!ok) {
+    console.warn(
+      `[Proxy] ${candidate.label} listens but egress is DEAD — skipping (direct fallback)`,
+    );
+  }
+  return ok;
 }
 
 function isGlobalPac(content: string): boolean {
@@ -200,9 +240,9 @@ async function pickProxyRules(): Promise<{ rules: string; label: string } | null
 
   for (const c of CANDIDATES) {
     if (c.label === 'env') continue;
-    if (await rulesReachable(c)) {
-      return { rules: c.rules, label: c.label };
-    }
+    if (!(await rulesReachable(c))) continue;
+    if (!(await egressAlive(c))) continue;
+    return { rules: c.rules, label: c.label };
   }
   return null;
 }

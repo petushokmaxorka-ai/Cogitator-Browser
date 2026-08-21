@@ -54,10 +54,10 @@ const QuickLinkTile: React.FC<QuickLinkTileProps> = ({ link, onClick, onRemove }
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '8px',
-        padding: '16px 8px',
+        gap: '4px',
+        padding: '8px 4px',
         cursor: 'pointer',
-        minHeight: '80px',
+        minHeight: '40px',
         userSelect: 'none',
       }}
       onClick={() => onClick(link.url)}
@@ -97,12 +97,12 @@ const QuickLinkTile: React.FC<QuickLinkTileProps> = ({ link, onClick, onRemove }
       {/* Favicon */}
       <div
         style={{
-          width: '32px',
-          height: '32px',
+          width: '18px',
+          height: '18px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          borderRadius: '4px',
+          borderRadius: '3px',
           background: 'var(--void-black)',
           border: '1px solid var(--iron-gray)',
           overflow: 'hidden',
@@ -112,13 +112,13 @@ const QuickLinkTile: React.FC<QuickLinkTileProps> = ({ link, onClick, onRemove }
           <img
             src={faviconUrl}
             alt=""
-            style={{ width: '16px', height: '16px' }}
+            style={{ width: '12px', height: '12px' }}
             onError={(e) => {
               (e.target as HTMLImageElement).style.display = 'none';
             }}
           />
         ) : (
-          <span style={{ fontSize: '14px', color: 'var(--cogitator-gold)' }}>\u26A1</span>
+          <span style={{ fontSize: '10px', color: 'var(--cogitator-gold)' }}>\u26A1</span>
         )}
       </div>
 
@@ -141,7 +141,7 @@ const QuickLinkTile: React.FC<QuickLinkTileProps> = ({ link, onClick, onRemove }
       {/* Domain */}
       <span
         style={{
-          fontSize: '9px',
+          fontSize: '8px',
           color: 'var(--parchment-dim)',
           fontFamily: 'var(--font-mono)',
           textAlign: 'center',

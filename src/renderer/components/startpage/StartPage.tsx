@@ -17,9 +17,9 @@ type FolderId = 'heretic' | 'webForge' | 'forge' | 'quick';
 
 // ── Constants ──────────────────────────────────────────────
 
-const STORAGE_HERETIC = 'cogitator_heretic_links_v1';
+const STORAGE_HERETIC = 'cogitator_heretic_links_v2';
 const STORAGE_WEB_FORGE = 'cogitator_web_forge_links_v1';
-const STORAGE_FORGE = 'cogitator_forge_links_v1';
+const STORAGE_FORGE = 'cogitator_forge_links_v2';
 const STORAGE_QUICK = 'cogitator_quicklinks_v4';
 
 const OPEN_KEYS: Record<FolderId, string> = {
@@ -30,7 +30,6 @@ const OPEN_KEYS: Record<FolderId, string> = {
 };
 
 const DEFAULT_HERETIC: QuickLink[] = [
-  { id: 'oracle', title: 'Anathemetron', url: 'http://127.0.0.1:8765', favicon: '☉' },
   { id: 'forge', title: 'Heretic Forge', url: 'http://127.0.0.1:9091', favicon: '⚒' },
   { id: 'dashboard', title: 'Dashboard', url: 'http://127.0.0.1:7777', favicon: '' },
   { id: 'noosphere', title: 'Noosphere', url: 'cogitator://noosphere', favicon: '' },
@@ -38,9 +37,13 @@ const DEFAULT_HERETIC: QuickLink[] = [
 ];
 
 const DEFAULT_FORGE: QuickLink[] = [
-  { id: 'forge-web', title: 'Forge Web UI', url: 'http://127.0.0.1:9091', favicon: '⚒' },
   { id: 'forge-llm', title: 'LLM Swarm', url: 'http://127.0.0.1:11436/v1/models', favicon: '☉' },
   { id: 'forge-tui', title: 'Forge TUI', url: 'cogitator://forge-tui', favicon: '◆' },
+  { id: 'kimi', title: 'Kimi', url: 'https://www.kimi.com', favicon: '' },
+  { id: 'qwen', title: 'Qwen', url: 'https://chat.qwen.ai', favicon: '' },
+  { id: 'zai', title: 'Z.ai', url: 'https://chat.z.ai', favicon: '' },
+  { id: 'minimax', title: 'MiniMax', url: 'https://chat.minimax.io', favicon: '' },
+  { id: 'mimo', title: 'MiMo', url: 'https://huggingface.co/XiaomiMiMo', favicon: '' },
 ];
 
 const DEFAULT_WEB_FORGE: QuickLink[] = [

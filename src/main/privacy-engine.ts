@@ -164,6 +164,12 @@ function getSessionNoise(): number {
 export function configurePrivacySession(sess?: Session): void {
   const s = sess || session.defaultSession;
 
+  // ── UA without Electron/app tokens (Google login "insecure browser" fix).
+  //    Real Chromium version keeps the UA consistent with Sec-CH-UA hints.
+  s.setUserAgent(
+    `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${process.versions.chrome} Safari/537.36`,
+  );
+
   // ── 1.1.1 WebRTC: deny all permission requests by default ──
   // The critical IP-leak prevention is the command-line switch:
   //   --force-webrtc-ip-handling-policy=disable_non_proxied_udp
