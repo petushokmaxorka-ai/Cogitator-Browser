@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="forgeGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e8c87e"/>
+      <stop offset="50%" stop-color="#c8a86e"/>
+      <stop offset="100%" stop-color="#8b7355"/>
+    </linearGradient>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#111111"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="128" height="128" fill="url(#bg)" rx="14"/>
+  <g transform="translate(64,64)" filter="url(#glow)">
+    <!-- Outer cog teeth -->
+    <g stroke="url(#forgeGold)" stroke-width="3" fill="none">
+      <circle r="52" stroke-width="2"/>
+      <path d="M-10,-60 L-7,-50 L7,-50 L10,-60 Z" fill="#3a3028"/>
+      <path d="M-10,-60 L-7,-50 L7,-50 L10,-60 Z" transform="rotate(30)"/>
+      <path d="M-10,-60 L-7,-50 L7,-50 L10,-60 Z" transform="rotate(60)"/>
+      <path d="M-10,-60 L-7,-50 L7,-50 L10,-60 Z" transform="rotate(90)"/>
+      <path d="M-10,-60 L-7,-50 L7,-50 L10,-60 Z" transform="rotate(120)"/>
+      <path d="M-10,-60 L-7,-50 L7,-50 L10,-60 Z" transform="rotate(150)"/>
+      <path d="M-10,-60 L-7,-50 L7,-50 L10,-60 Z" transform="rotate(180)"/>
+      <path d="M-10,-60 L-7,-50 L7,-50 L10,-60 Z" transform="rotate(210)"/>
+      <path d="M-10,-60 L-7,-50 L7,-50 L10,-60 Z" transform="rotate(240)"/>
+      <path d="M-10,-60 L-7,-50 L7,-50 L10,-60 Z" transform="rotate(270)"/>
+      <path d="M-10,-60 L-7,-50 L7,-50 L10,-60 Z" transform="rotate(300)"/>
+      <path d="M-10,-60 L-7,-50 L7,-50 L10,-60 Z" transform="rotate(330)"/>
+    </g>
+    <!-- Inner rim -->
+    <circle r="38" stroke="url(#forgeGold)" stroke-width="1.5" fill="none" opacity="0.6"/>
+    <!-- Browser / omnissiah eye -->
+    <g fill="url(#forgeGold)">
+      <!-- Eye shape -->
+      <path d="M-24,0 C-12,-18 12,-18 24,0 C12,18 -12,18 -24,0 Z" stroke="#3a3028" stroke-width="1"/>
+      <!-- Pupil -->
+      <circle r="7" fill="#000000"/>
+      <circle r="2.5" fill="#c8a86e" opacity="0.8"/>
+    </g>
+    <!-- Bottom hash marks -->
+    <g stroke="url(#forgeGold)" stroke-width="1.5" opacity="0.8">
+      <line x1="-18" y1="42" x2="18" y2="42"/>
+      <line x1="-12" y1="48" x2="12" y2="48"/>
+    </g>
+  </g>
+</svg>

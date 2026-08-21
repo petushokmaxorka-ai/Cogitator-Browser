@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>◉ COGITATOR PiP</title>
+<style>
+  /* ═══ RESET ═══ */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    background: transparent;
+    user-select: none;
+  }
+
+  /* ═══ ROOT VARS ═══ */
+  :root {
+    --void-black: #000000;
+    --iron-dark: #141414;
+    --iron-gray: #2A2A2A;
+    --steel-gray: #3A3A3A;
+    --omnissiah-red: #FF0000;
+    --omnissiah-red-dim: #8B0000;
+    --cogitator-gold: #C8A84B;
+    --cogitator-gold-dim: #8B7355;
+    --noosphere-cyan: #00BFBF;
+    --sacred-white: #E8E8E8;
+    --text-muted: #666666;
+    --pip-radius: 4px;
+    --pip-border: 1px solid var(--iron-gray);
+  }
+
+  /* ═══ MAIN CONTAINER ═══ */
+  #pip-root {
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--void-black);
+    border: var(--pip-border);
+    border-radius: var(--pip-radius);
+    box-shadow:
+      0 8px 32px rgba(0,0,0,0.8),
+      0 0 0 1px rgba(200,168,75,0.15),
+      inset 0 1px 0 rgba(200,168,75,0.05);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ═══ DRAG HEADER ═══ */
+  .pip-header {
+    height: 28px;
+    background: linear-gradient(180deg, var(--iron-dark) 0%, var(--void-black) 100%);
+    border-bottom: 1px solid var(--iron-gray);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+    -webkit-app-region: drag;
+    cursor: grab;
+    flex-shrink: 0;
+    z-index: 10;
+  }
+  .pip-header:active { cursor: grabbing; }
+
+  .pip-title {
+    font-size: 10px;
+    color: var(--cogitator-gold-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 60%;
+    pointer-events: none;
+  }
+
+  .pip-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    -webkit-app-region: no-drag;
+  }
+
+  .pip-btn {
+    width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    padding: 0;
+  }
+  .pip-btn:hover {
+    background: rgba(255,255,255,0.06);
+    color: var(--sacred-white);
+  }
+  .pip-btn:active { transform: scale(0.92); }
+  .pip-btn.close:hover { color: var(--omnissiah-red); background: rgba(255,0,0,0.1); }
+  .pip-btn svg { width: 12px; height: 12px; }
+
+  /* ═══ VIDEO CONTAINER ═══ */
+  .pip-video-wrap {
+    flex: 1;
+    position: relative;
+    background: #000;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pip-video-wrap video,
+  .pip-video-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    object-fit: contain;
+  }
+
+  /* Fallback overlay */
+  .pip-fallback {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+  .pip-fallback.active { display: flex; }
+  .pip-fallback .pip-fallback-icon {
+    font-size: 32px;
+    opacity: 0.3;
+  }
+  .pip-fallback .pip-fallback-text {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .pip-fallback .pip-fallback-btn {
+    margin-top: 8px;
+    padding: 6px 16px;
+    background: var(--iron-gray);
+    border: 1px solid var(--steel-gray);
+    color: var(--cogitator-gold);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .pip-fallback .pip-fallback-btn:hover {
+    border-color: var(--cogitator-gold);
+    background: rgba(200,168,75,0.08);
+  }
+
+  /* ═══ CONTROLS BAR ═══ */
+  .pip-controls {
+    height: 36px;
+    background: linear-gradient(0deg, var(--iron-dark) 0%, var(--void-black) 100%);
+    border-top: 1px solid var(--iron-gray);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 8px;
+    flex-shrink: 0;
+    z-index: 10;
+  }
+
+  .pip-play-btn {
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--sacred-white);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.15s;
+    padding: 0;
+  }
+  .pip-play-btn:hover {
+    background: rgba(255,255,255,0.08);
+    color: var(--cogitator-gold);
+  }
+  .pip-play-btn svg { width: 14px; height: 14px; }
+
+  /* Timeline */
+  .pip-timeline-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pip-time {
+    font-size: 9px;
+    color: var(--text-muted);
+    min-width: 32px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pip-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 3px;
+    background: var(--iron-gray);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  .pip-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--cogitator-gold);
+    border: 2px solid var(--void-black);
+    box-shadow: 0 0 4px rgba(200,168,75,0.4);
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  .pip-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+  }
+
+  /* Volume */
+  .pip-volume-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .pip-volume-slider {
+    width: 50px;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 3px;
+    background: var(--iron-gray);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  .pip-volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--noosphere-cyan);
+    border: 1px solid var(--void-black);
+    cursor: pointer;
+  }
+  .pip-volume-icon {
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+  }
+  .pip-volume-icon svg { width: 12px; height: 12px; }
+
+  /* ═══ RESIZE HANDLE ═══ */
+  .pip-resize {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 16px; height: 16px;
+    cursor: se-resize;
+    z-index: 20;
+    -webkit-app-region: no-drag;
+  }
+  .pip-resize::after {
+    content: '';
+    position: absolute;
+    bottom: 3px; right: 3px;
+    width: 8px; height: 8px;
+    border-right: 2px solid var(--cogitator-gold-dim);
+    border-bottom: 2px solid var(--cogitator-gold-dim);
+    opacity: 0.4;
+    transition: opacity 0.15s;
+  }
+  .pip-resize:hover::after {
+    opacity: 0.8;
+    border-color: var(--cogitator-gold);
+  }
+
+  /* ═══ LOADING ═══ */
+  .pip-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--void-black);
+    z-index: 5;
+  }
+  .pip-loading.hidden { display: none; }
+  .pip-spinner {
+    width: 24px; height: 24px;
+    border: 2px solid var(--iron-gray);
+    border-top-color: var(--omnissiah-red);
+    border-radius: 50%;
+    animation: pip-spin 0.8s linear infinite;
+  }
+  @keyframes pip-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ═══ HIDDEN STATE ═══ */
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div id="pip-root">
+  <!-- Header -->
+  <div class="pip-header">
+    <span class="pip-title" id="pip-title">◉ COGITATOR PiP</span>
+    <div class="pip-header-actions">
+      <button class="pip-btn" id="btn-return" title="Return to Tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="pip-btn close" id="btn-close" title="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Video Area -->
+  <div class="pip-video-wrap" id="video-wrap">
+    <div class="pip-loading" id="pip-loading"><div class="pip-spinner"></div></div>
+
+    <!-- Direct video element -->
+    <video id="pip-video" class="hidden" preload="auto" playsinline></video>
+
+    <!-- YouTube iframe -->
+    <iframe id="pip-youtube" class="hidden" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+
+    <!-- Fallback -->
+    <div class="pip-fallback" id="pip-fallback">
+      <div class="pip-fallback-icon">◉</div>
+      <div class="pip-fallback-text">
+        The Machine Spirit cannot extract<br>this video stream directly.
+      </div>
+      <button class="pip-fallback-btn" id="btn-fallback-return">Return to Tab</button>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="pip-controls" id="pip-controls">
+    <button class="pip-play-btn" id="btn-play">
+      <!-- Play icon -->
+      <svg id="icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <!-- Pause icon -->
+      <svg id="icon-pause" class="hidden" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+
+    <div class="pip-timeline-wrap">
+      <span class="pip-time" id="time-current">0:00</span>
+      <input type="range" class="pip-slider" id="timeline" min="0" max="100" value="0" step="0.1">
+      <span class="pip-time" id="time-duration">0:00</span>
+    </div>
+
+    <div class="pip-volume-wrap">
+      <span class="pip-volume-icon" id="volume-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      </span>
+      <input type="range" class="pip-volume-slider" id="volume" min="0" max="1" value="1" step="0.05">
+    </div>
+  </div>
+
+  <!-- Resize handle -->
+  <div class="pip-resize" id="pip-resize"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// PiP Window Renderer Script
+// ═══════════════════════════════════════════════════════════
+
+(function() {
+  'use strict';
+
+  // ── Elements ────────────────────────────────────────────
+  const els = {
+    title: document.getElementById('pip-title'),
+    video: document.getElementById('pip-video'),
+    youtube: document.getElementById('pip-youtube'),
+    fallback: document.getElementById('pip-fallback'),
+    loading: document.getElementById('pip-loading'),
+    controls: document.getElementById('pip-controls'),
+    timeline: document.getElementById('timeline'),
+    volume: document.getElementById('volume'),
+    timeCurrent: document.getElementById('time-current'),
+    timeDuration: document.getElementById('time-duration'),
+    btnPlay: document.getElementById('btn-play'),
+    iconPlay: document.getElementById('icon-play'),
+    iconPause: document.getElementById('icon-pause'),
+    btnClose: document.getElementById('btn-close'),
+    btnReturn: document.getElementById('btn-return'),
+    btnFallbackReturn: document.getElementById('btn-fallback-return'),
+    volumeIcon: document.getElementById('volume-icon'),
+  };
+
+  // ── State ───────────────────────────────────────────────
+  let state = {
+    type: null, // 'direct' | 'youtube' | 'fallback'
+    paused: true,
+    currentTime: 0,
+    duration: 0,
+    volume: 1,
+    seeking: false,
+    url: '',
+    videoId: null,
+  };
+
+  // ── IPC via electronAPI ─────────────────────────────────
+  const api = window.electronAPI;
+
+  // ── Format time ─────────────────────────────────────────
+  function fmtTime(sec) {
+    if (!isFinite(sec) || sec < 0) return '0:00';
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    const h = Math.floor(sec / 3600);
+    if (h > 0) return `${h}:${String(m % 60).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    return `${m}:${String(s).padStart(2,'0')}`;
+  }
+
+  // ── Update UI ───────────────────────────────────────────
+  function updatePlayIcon() {
+    if (state.paused) {
+      els.iconPlay.classList.remove('hidden');
+      els.iconPause.classList.add('hidden');
+    } else {
+      els.iconPlay.classList.add('hidden');
+      els.iconPause.classList.remove('hidden');
+    }
+  }
+
+  function updateTimeline() {
+    if (state.seeking) return;
+    els.timeline.value = state.currentTime;
+    els.timeCurrent.textContent = fmtTime(state.currentTime);
+  }
+
+  function updateDuration() {
+    els.timeline.max = state.duration || 100;
+    els.timeDuration.textContent = fmtTime(state.duration);
+  }
+
+  function updateVolume() {
+    els.volume.value = state.volume;
+    // Update volume icon
+    const vol = parseFloat(els.volume.value);
+    if (vol === 0) {
+      els.volumeIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
+    } else if (vol < 0.5) {
+      els.volumeIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
+    } else {
+      els.volumeIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
+    }
+  }
+
+  // ── Load Video ──────────────────────────────────────────
+  function loadVideo(payload) {
+    state.type = payload.type;
+    state.url = payload.url || '';
+    state.title = payload.title || 'Video';
+    state.currentTime = payload.currentTime || 0;
+    state.paused = payload.paused ?? true;
+    state.duration = payload.duration || 0;
+
+    els.title.textContent = '◉ ' + (state.title || 'COGITATOR PiP');
+    els.loading.classList.remove('hidden');
+    els.fallback.classList.remove('active');
+    els.video.classList.add('hidden');
+    els.youtube.classList.add('hidden');
+
+    if (payload.type === 'youtube' && payload.videoId) {
+      state.videoId = payload.videoId;
+      const start = payload.startTime || 0;
+      const id = encodeURIComponent(payload.videoId);
+      const origin = encodeURIComponent('https://www.youtube.com');
+      els.youtube.src =
+        payload.embedUrl ||
+        (`https://www.youtube.com/embed/${id}` +
+        `?autoplay=1&start=${start}&rel=0&modestbranding=1&playsinline=1` +
+        `&enablejsapi=1&origin=${origin}&widget_referrer=${origin}`);
+      els.youtube.classList.remove('hidden');
+      els.controls.style.display = 'none';
+      let embedReady = false;
+      const hideLoading = () => {
+        if (embedReady) return;
+        embedReady = true;
+        els.loading.classList.add('hidden');
+      };
+      els.youtube.addEventListener('load', hideLoading, { once: true });
+      setTimeout(hideLoading, 8000);
+      return;
+    }
+
+    if (payload.type === 'direct' && payload.src) {
+      els.video.src = payload.src;
+      els.video.currentTime = payload.currentTime || 0;
+      els.video.classList.remove('hidden');
+      els.controls.style.display = '';
+
+      els.video.addEventListener('loadedmetadata', () => {
+        state.duration = els.video.duration || 0;
+        updateDuration();
+        els.loading.classList.add('hidden');
+      }, { once: true });
+
+      els.video.addEventListener('error', () => {
+        els.loading.classList.add('hidden');
+        showFallback();
+      }, { once: true });
+
+      if (!state.paused) {
+        els.video.play().catch(() => {});
+      }
+      updatePlayIcon();
+      updateTimeline();
+      return;
+    }
+
+    // Fallback
+    els.loading.classList.add('hidden');
+    showFallback();
+  }
+
+  function showFallback() {
+    els.fallback.classList.add('active');
+    els.video.classList.add('hidden');
+    els.youtube.classList.add('hidden');
+    els.controls.style.display = 'none';
+  }
+
+  // ── Sync from main ──────────────────────────────────────
+  function syncState(payload) {
+    if (payload.currentTime !== undefined) {
+      state.currentTime = payload.currentTime;
+      if (state.type === 'direct' && els.video && !state.seeking) {
+        els.video.currentTime = payload.currentTime;
+      }
+      updateTimeline();
+    }
+    if (payload.paused !== undefined) {
+      state.paused = payload.paused;
+      updatePlayIcon();
+      if (state.type === 'direct' && els.video) {
+        if (payload.paused) els.video.pause();
+        else els.video.play().catch(() => {});
+      }
+    }
+    if (payload.duration !== undefined) {
+      state.duration = payload.duration;
+      updateDuration();
+    }
+  }
+
+  // ── Event Listeners: Controls ───────────────────────────
+
+  // Play / Pause
+  els.btnPlay.addEventListener('click', () => {
+    if (state.type === 'direct' && els.video) {
+      if (els.video.paused) {
+        els.video.play();
+        state.paused = false;
+        sendControl('play');
+      } else {
+        els.video.pause();
+        state.paused = true;
+        sendControl('pause');
+      }
+    } else {
+      state.paused = !state.paused;
+      sendControl(state.paused ? 'pause' : 'play');
+    }
+    updatePlayIcon();
+  });
+
+  // Timeline
+  els.timeline.addEventListener('input', () => {
+    state.seeking = true;
+    state.currentTime = parseFloat(els.timeline.value);
+    els.timeCurrent.textContent = fmtTime(state.currentTime);
+  });
+
+  els.timeline.addEventListener('change', () => {
+    state.seeking = false;
+    const time = parseFloat(els.timeline.value);
+    if (state.type === 'direct' && els.video) {
+      els.video.currentTime = time;
+    }
+    sendControl('seek', { time });
+  });
+
+  // Video timeupdate (for direct video)
+  els.video.addEventListener('timeupdate', () => {
+    if (state.seeking) return;
+    state.currentTime = els.video.currentTime;
+    state.duration = els.video.duration || state.duration;
+    updateTimeline();
+  });
+
+  els.video.addEventListener('play', () => { state.paused = false; updatePlayIcon(); });
+  els.video.addEventListener('pause', () => { state.paused = true; updatePlayIcon(); });
+  els.video.addEventListener('ended', () => { state.paused = true; updatePlayIcon(); });
+
+  // Volume
+  els.volume.addEventListener('input', () => {
+    const vol = parseFloat(els.volume.value);
+    state.volume = vol;
+    if (els.video) els.video.volume = vol;
+    updateVolume();
+  });
+
+  // Close / Return
+  els.btnClose.addEventListener('click', () => sendControl('close'));
+  els.btnReturn.addEventListener('click', () => sendControl('return-to-tab'));
+  els.btnFallbackReturn.addEventListener('click', () => sendControl('return-to-tab'));
+
+  function sendControl(action, data) {
+    if (api && api.pip && api.pip.sendControl) {
+      api.pip.sendControl(action, data);
+    }
+  }
+
+  // ── IPC Listeners ───────────────────────────────────────
+  if (api && api.pip) {
+    api.pip.onLoadVideo((payload) => loadVideo(payload));
+    api.pip.onSync((payload) => syncState(payload));
+  }
+
+  // ── Keyboard shortcuts ──────────────────────────────────
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+      e.preventDefault();
+      els.btnPlay.click();
+    }
+    if (e.code === 'Escape') {
+      sendControl('close');
+    }
+  });
+
+  // ── Init ────────────────────────────────────────────────
+  updatePlayIcon();
+  updateVolume();
+
+})();
+</script>
+</body>
+</html>

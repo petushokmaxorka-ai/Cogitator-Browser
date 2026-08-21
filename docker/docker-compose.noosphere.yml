@@ -1,0 +1,30 @@
+# ═══════════════════════════════════════════════════════════════════════
+# DOCKER COMPOSE - NOOSPHERE SEARCH (SEARXNG)
+# Dark Mechanicus Edition - COGITATOR BROWSER
+#
+# Deploys SearXNG with the sacred cogitator theme.
+# The Machine Spirit guides the search queries.
+# ═══════════════════════════════════════════════════════════════════════
+
+services:
+  searxng:
+    image: searxng/searxng:latest
+    container_name: noosphere
+    ports:
+      - "8888:8080"
+    volumes:
+      # SearXNG configuration (read-only)
+      - ../noosphere-search/settings.yml:/etc/searxng/settings.yml:ro
+      # Custom cogitator theme (read-only)
+      - ../noosphere-search/themes/cogitator:/usr/local/searxng/searx/static/themes/cogitator:ro
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8888/
+      - SEARXNG_THEME=cogitator
+    restart: unless-stopped
+    # Resource limits to prevent daemonic incursion
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M

@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Name=COGITATOR BROWSER
+Name[ru]=COGITATOR BROWSER
+Comment=Sacred Instrument of the Omnissiah
+Comment[ru]=Священный инструмент Омниссии
+Exec=/home/heretic/heretic-os/cogitator-browser/resources/launch-cogitator.sh
+Icon=/home/heretic/heretic-os/cogitator-browser/resources/cogitator-icon.svg
+Type=Application
+Terminal=false
+Categories=Network;WebBrowser;
+Keywords=browser;web;internet;omnissiah;mechanicus;wh40k;
+StartupNotify=true
+StartupWMClass=cogitator-browser

@@ -1,0 +1,257 @@
+/* ═══════════════════════════════════════════════════════════
+   Mechanicus-Specific Styles
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Mechanicus Border (corner brackets) ─────────────────── */
+.mech-border {
+  position: relative;
+  border: 1px solid var(--iron-gray);
+}
+
+.mech-border::before,
+.mech-border::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: var(--omnissiah-red);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.mech-border::before {
+  top: -1px;
+  left: -1px;
+  border-width: 2px 0 0 2px;
+}
+
+.mech-border::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 2px 2px 0;
+}
+
+.mech-border-active {
+  border-color: var(--omnissiah-red);
+  box-shadow: var(--glow-red);
+}
+
+/* ── Decorative corner rivets ────────────────────────────── */
+.mech-rivets {
+  position: relative;
+}
+
+.mech-rivets::before,
+.mech-rivets::after {
+  content: '◉';
+  position: absolute;
+  font-size: 8px;
+  color: var(--steel-gray);
+  pointer-events: none;
+}
+
+.mech-rivets::before {
+  top: 2px;
+  left: 4px;
+}
+
+.mech-rivets::after {
+  top: 2px;
+  right: 4px;
+}
+
+/* ── Status indicators ───────────────────────────────────── */
+.status-online {
+  color: var(--noosphere-cyan);
+  text-shadow: 0 0 8px rgba(0, 191, 191, 0.6);
+}
+
+.status-offline {
+  color: var(--omnissiah-red);
+  text-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
+}
+
+.status-idle {
+  color: var(--cogitator-gold);
+  text-shadow: 0 0 8px rgba(200, 168, 75, 0.4);
+}
+
+/* ── Terminal/Message styling ────────────────────────────── */
+.terminal-message {
+  font-family: var(--font-mono);
+  line-height: 1.6;
+}
+
+.terminal-message p {
+  margin-bottom: 0.5em;
+}
+
+.terminal-message code {
+  background: rgba(0, 191, 191, 0.1);
+  border: 1px solid rgba(0, 191, 191, 0.2);
+  padding: 1px 4px;
+  border-radius: 2px;
+  color: var(--noosphere-cyan);
+}
+
+.terminal-message pre {
+  background: var(--iron-dark);
+  border: 1px solid var(--iron-gray);
+  padding: 12px;
+  margin: 8px 0;
+  overflow-x: auto;
+  border-left: 2px solid var(--omnissiah-red);
+}
+
+/* ── Section headers (with decorative lines) ─────────────── */
+.mech-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cogitator-gold);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.mech-header::before,
+.mech-header::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--steel-gray) 20%,
+    var(--steel-gray) 80%,
+    transparent
+  );
+}
+
+/* ── Data display (hex/tech feel) ────────────────────────── */
+.data-hex {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.data-value {
+  font-family: var(--font-mono);
+  color: var(--noosphere-cyan);
+}
+
+/* ── Ritual incantation style for AI responses ───────────── */
+.ritual-text {
+  color: var(--cogitator-gold);
+  font-style: italic;
+  border-left: 2px solid var(--cogitator-gold-dim);
+  padding-left: 12px;
+  margin: 8px 0;
+}
+
+/* ── Loading cog/spinner ─────────────────────────────────── */
+@keyframes spin-cog {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-cog {
+  display: inline-block;
+  animation: spin-cog 2s linear infinite;
+  color: var(--omnissiah-red);
+}
+
+/* ── Button variants ─────────────────────────────────────── */
+.btn-mech {
+  position: relative;
+  padding: 6px 16px;
+  background: var(--iron-dark);
+  border: 1px solid var(--iron-gray);
+  color: var(--parchment);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.btn-mech:hover {
+  border-color: var(--omnissiah-red);
+  box-shadow: var(--glow-red);
+  color: var(--sacred-white);
+}
+
+.btn-mech:active {
+  background: var(--omnissiah-red-dim);
+}
+
+.btn-mech-primary {
+  background: linear-gradient(135deg, var(--omnissiah-red-dim), var(--iron-dark));
+  border-color: var(--omnissiah-red);
+  color: var(--sacred-white);
+}
+
+.btn-mech-primary:hover {
+  background: linear-gradient(135deg, var(--omnissiah-red), var(--omnissiah-red-dim));
+}
+
+/* ── Panel/Card styling ──────────────────────────────────── */
+.mech-panel {
+  background: var(--void-black);
+  border: 1px solid var(--iron-gray);
+  position: relative;
+}
+
+.mech-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--omnissiah-red),
+    var(--cogitator-gold),
+    var(--noosphere-cyan),
+    transparent
+  );
+}
+
+/* ── Divider with ornament ───────────────────────────────── */
+.mech-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--steel-gray);
+}
+
+.mech-divider::before,
+.mech-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--iron-gray);
+}
+
+/* ── Warning/Adeptus style ───────────────────────────────── */
+.warning-adeptus {
+  border: 1px solid var(--omnissiah-red);
+  background: rgba(255, 0, 0, 0.05);
+  padding: 8px 12px;
+  color: var(--omnissiah-red);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ── Sacred text (glowing scripture) ─────────────────────── */
+.sacred-text {
+  color: var(--cogitator-gold);
+  text-shadow: 0 0 10px rgba(200, 168, 75, 0.3);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}

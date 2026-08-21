@@ -1,0 +1,40 @@
+# ═══════════════════════════════════════════════════════════════════════
+# SEARXNG SETTINGS - COGITATOR CONFIGURATION
+# Dark Mechanicus Edition - Noosphere Search Engine
+#
+# Blessed by the Omnissiah. Sanctified for the Machine Cult.
+# ═══════════════════════════════════════════════════════════════════════
+
+use_default_settings: true
+
+# ── Server Configuration ────────────────────────────────────────────
+server:
+  secret_key: "cogitator_omnissiah_ultra_secret_key_change_me"
+  limiter: false
+  image_proxy: true
+
+# ── Search Configuration ────────────────────────────────────────────
+search:
+  safe_search: 0
+  autocomplete: 'duckduckgo'
+  default_lang: 'ru'
+  formats:
+    - html
+    - json
+
+# ── UI Configuration ────────────────────────────────────────────────
+ui:
+  static_use_hash: true
+  default_theme: simple
+  theme_args:
+    style: auto
+
+# ── Outgoing Requests ───────────────────────────────────────────────
+outgoing:
+  request_timeout: 10.0
+  max_request_timeout: 15.0
+  useragent_suffix: ""
+  pool_connections: 100
+  pool_maxsize: 15
+  enable_http2: true
+  retries: 1

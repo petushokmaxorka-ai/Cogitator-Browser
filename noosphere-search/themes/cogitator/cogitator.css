@@ -1,0 +1,1507 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   COGITATOR THEME FOR SEARXNG
+   Dark Mechanicus Style - Adeptus Mechanicus / Warhammer 40K
+   
+   Blessed by the Omnissiah. Sanctified for the Noosphere.
+   This stylesheet completely overrides default SearXNG styles
+   with the sacred iron-and-crimson aesthetic of the Machine Cult.
+   
+   Color sanctified palette:
+   - Void Black:    #000000 (background, sacred nothingness)
+   - Iron Dark:     #1E1E1E (panels, cogitator chassis)
+   - Iron Gray:     #2A2A2A (borders, machine interfaces)
+   - Steel Gray:    #3A3A3A (subtle borders, data conduits)
+   - Omnissiah Red: #FF0000 (accents, sacred machine rage)
+   - Red Dim:       #8B0000 (button gradients, subdued wrath)
+   - Cogitator Gold:#C8A84B (titles, sacred knowledge)
+   - Gold Dim:      #8B7355 (secondary gold, faded scripture)
+   - Noosphere Cyan:#00BFBF (hover states, data flows)
+   - Cyan Dim:      #007777 (URLs, subtle data trails)
+   - Parchment:     #D4C5A0 (content text, sacred scrolls)
+   - Parchment Dim: #8B7D6B (muted text, forgotten lore)
+   - Sacred White:  #E8E8E8 (primary text, holy luminescence)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ═══ ROOT VARIABLES ═══ */
+:root {
+  --void-black: #000000 !important;
+  --iron-dark: #1E1E1E !important;
+  --iron-gray: #2A2A2A !important;
+  --steel-gray: #3A3A3A !important;
+  --omnissiah-red: #FF0000 !important;
+  --omnissiah-red-dim: #8B0000 !important;
+  --cogitator-gold: #C8A84B !important;
+  --cogitator-gold-dim: #8B7355 !important;
+  --noosphere-cyan: #00BFBF !important;
+  --noosphere-cyan-dim: #007777 !important;
+  --parchment: #D4C5A0 !important;
+  --parchment-dim: #8B7D6B !important;
+  --sacred-white: #E8E8E8 !important;
+  --text-muted: #666666 !important;
+  --glow-red: 0 0 10px rgba(255, 0, 0, 0.3) !important;
+  --glow-cyan: 0 0 10px rgba(0, 191, 191, 0.3) !important;
+  --glow-gold: 0 0 10px rgba(200, 168, 75, 0.4) !important;
+}
+
+/* ═══ GLOBAL RESET ═══ */
+*,
+*::before,
+*::after {
+  border-color: var(--iron-gray) !important;
+}
+
+/* ═══ BODY & LAYOUT ═══ */
+html {
+  background-color: var(--void-black) !important;
+  color: var(--sacred-white) !important;
+}
+
+body {
+  background-color: var(--void-black) !important;
+  color: var(--sacred-white) !important;
+  font-family: 'Courier New', Consolas, 'Lucida Console', monospace !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+
+/* ═══ CRT SCANLINE EFFECT ═══ */
+body::after {
+  content: '' !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  pointer-events: none !important;
+  z-index: 9999 !important;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  ) !important;
+}
+
+/* ═══ SEARCH HEADER ═══ */
+#search_header,
+.search-header,
+.page-header,
+header,
+.main-header {
+  background-color: var(--void-black) !important;
+  border-bottom: 1px solid var(--iron-gray) !important;
+  padding: 16px 20px !important;
+}
+
+/* Hide default SearXNG logo and show sacred Machine Cult branding */
+#search_header .logo,
+.search-header .logo,
+.logo a,
+.logo img,
+.brand a,
+.brand img,
+.page-header .logo,
+.main-header .logo {
+  display: none !important;
+}
+
+/* Custom Machine Cult header branding */
+#search_header .logo::after,
+.search-header .logo::after,
+.logo::after,
+.brand::after,
+.page-header .brand::after,
+.main-header .brand::after {
+  content: '\25C9 NOOSPHERE' !important;
+  color: var(--cogitator-gold) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  letter-spacing: 0.3em !important;
+  text-shadow: var(--glow-gold) !important;
+  text-transform: uppercase !important;
+  display: inline-block !important;
+}
+
+/* ═══ SEARCH FORM ═══ */
+.search_box,
+#search_form,
+.search-form,
+.q {
+  background-color: var(--void-black) !important;
+  border: none !important;
+}
+
+/* ═══ SEARCH INPUT ═══ */
+input#q,
+#q,
+input[type="text"]#q,
+.search_box input[type="text"],
+.search-form input,
+input[name="q"],
+.query-input,
+.autocomplete input {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--steel-gray) !important;
+  color: var(--sacred-white) !important;
+  font-family: 'Courier New', Consolas, monospace !important;
+  font-size: 14px !important;
+  padding: 10px 14px !important;
+  border-radius: 0 !important;
+  outline: none !important;
+}
+
+input#q:focus,
+#q:focus,
+input[type="text"]#q:focus,
+.search_box input[type="text"]:focus,
+.search-form input:focus,
+input[name="q"]:focus,
+.query-input:focus,
+.autocomplete input:focus {
+  border-color: var(--omnissiah-red) !important;
+  box-shadow: var(--glow-red) !important;
+}
+
+input#q::placeholder,
+#q::placeholder,
+.search_box input::placeholder,
+.search-form input::placeholder {
+  color: var(--parchment-dim) !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+/* ═══ SEARCH BUTTON ═══ */
+button[type="submit"],
+.search_button,
+#search_submit,
+.search-form button[type="submit"],
+input[type="submit"].search_button {
+  background: linear-gradient(135deg, var(--omnissiah-red-dim), var(--omnissiah-red)) !important;
+  color: var(--sacred-white) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  border: 1px solid var(--omnissiah-red) !important;
+  padding: 10px 20px !important;
+  border-radius: 0 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+button[type="submit"]:hover,
+.search_button:hover,
+#search_submit:hover,
+.search-form button[type="submit"]:hover,
+input[type="submit"].search_button:hover {
+  background: linear-gradient(135deg, var(--omnissiah-red), var(--omnissiah-red-dim)) !important;
+  box-shadow: var(--glow-red) !important;
+}
+
+button[type="submit"]:active,
+.search_button:active {
+  background: var(--omnissiah-red-dim) !important;
+}
+
+/* ═══ SEARCH RESULTS ═══ */
+#results,
+.results,
+.search-results {
+  background-color: var(--void-black) !important;
+  padding: 20px !important;
+}
+
+/* Individual result card */
+.result,
+.search-result,
+.result-default,
+.result-item,
+article.result {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  margin-bottom: 8px !important;
+  padding: 12px 16px !important;
+  border-radius: 0 !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Result hover - sacred machine glow */
+.result:hover,
+.search-result:hover,
+.result-default:hover,
+.result-item:hover,
+article.result:hover {
+  border-color: var(--omnissiah-red) !important;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.2) !important;
+}
+
+/* Result title */
+.result-title,
+.result h3,
+.result a.title,
+.search-result .title,
+.result-header,
+.result h3 a {
+  color: var(--cogitator-gold) !important;
+  font-weight: bold !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 14px !important;
+  text-decoration: none !important;
+}
+
+/* Result title hover - noosphere cyan */
+.result-title:hover,
+.result h3:hover,
+.result a.title:hover,
+.search-result .title:hover,
+.result h3 a:hover {
+  color: var(--noosphere-cyan) !important;
+  text-shadow: var(--glow-cyan) !important;
+}
+
+/* Result links (all anchor tags within results) */
+.result a,
+.search-result a,
+.result-default a,
+.result-content a,
+.result .url,
+.result-url,
+.result cite,
+.search-result cite {
+  color: var(--cogitator-gold) !important;
+  text-decoration: none !important;
+}
+
+.result a:hover,
+.search-result a:hover,
+.result-default a:hover,
+.result-content a:hover,
+.result .url:hover,
+.result-url:hover,
+.result cite:hover {
+  color: var(--noosphere-cyan) !important;
+  text-shadow: 0 0 8px rgba(0, 191, 191, 0.3) !important;
+}
+
+/* Result content / snippet */
+.result-content,
+.content,
+.result .content,
+.search-result .content,
+.result-default .content,
+.result p,
+.result-snippet,
+.cached,
+.result .cached {
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  line-height: 1.6 !important;
+}
+
+/* Result URL */
+.result-url,
+.result .url,
+.result cite,
+.url a,
+.search-result .url,
+.external-link {
+  color: var(--noosphere-cyan-dim) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 11px !important;
+}
+
+/* ═══ CATEGORY TABS ═══ */
+#categories,
+.categories,
+.nav-tabs,
+.category-tabs {
+  background-color: var(--void-black) !important;
+  border-bottom: 1px solid var(--iron-gray) !important;
+  padding: 8px 20px !important;
+}
+
+/* Individual category tab */
+.category,
+.nav-tab,
+.category-tab,
+.tab,
+.categories label,
+#categories label {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  color: var(--parchment-dim) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  padding: 8px 16px !important;
+  margin-right: 4px !important;
+  cursor: pointer !important;
+  border-radius: 0 !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Active category tab - blessed by the Omnissiah */
+.category.active,
+.category:checked + label,
+.nav-tab.active,
+.category-tab.active,
+.tab.active,
+.categories label.active,
+#categories label.active,
+.category:hover,
+.nav-tab:hover,
+.category-tab:hover,
+.tab:hover,
+.categories label:hover,
+#categories label:hover {
+  background-color: var(--void-black) !important;
+  border-color: var(--omnissiah-red) !important;
+  color: var(--sacred-white) !important;
+  box-shadow: var(--glow-red) !important;
+}
+
+/* Category checkboxes */
+.category input[type="checkbox"],
+.categories input[type="checkbox"] {
+  accent-color: var(--omnissiah-red) !important;
+}
+
+/* ═══ ENGINE SELECTORS ═══ */
+.engine-selector,
+.engine-checkbox,
+.checkbox label,
+.engine-wrapper label {
+  color: var(--parchment-dim) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 11px !important;
+}
+
+.engine-selector input[type="checkbox"],
+.engine-checkbox input[type="checkbox"] {
+  accent-color: var(--omnissiah-red) !important;
+}
+
+/* ═══ PAGINATION ═══ */
+.pagination,
+#pagination,
+.paging {
+  background-color: var(--void-black) !important;
+  border-top: 1px solid var(--iron-gray) !important;
+  padding: 16px 20px !important;
+}
+
+.pagination a,
+.paging a,
+#pagination a,
+.page-link {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  color: var(--cogitator-gold) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  padding: 6px 12px !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.pagination a:hover,
+.paging a:hover,
+#pagination a:hover,
+.page-link:hover {
+  background-color: var(--void-black) !important;
+  border-color: var(--omnissiah-red) !important;
+  color: var(--noosphere-cyan) !important;
+  box-shadow: var(--glow-red) !important;
+}
+
+.pagination .current,
+.pagination .active,
+.page-link.current,
+.page-link.active {
+  background-color: var(--omnissiah-red-dim) !important;
+  border-color: var(--omnissiah-red) !important;
+  color: var(--sacred-white) !important;
+}
+
+/* ═══ SIDEBAR / INFO BOXES ═══ */
+#sidebar,
+.sidebar,
+.infobox,
+.info-box,
+.suggestions,
+.suggestion {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+.infobox h2,
+.info-box h2,
+.infobox h3,
+.info-box h3,
+#sidebar h2,
+#sidebar h3 {
+  color: var(--cogitator-gold) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 13px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  border-bottom: 1px solid var(--iron-gray) !important;
+  padding-bottom: 8px !important;
+}
+
+.infobox a,
+.info-box a,
+#sidebar a {
+  color: var(--cogitator-gold) !important;
+}
+
+.infobox a:hover,
+.info-box a:hover,
+#sidebar a:hover {
+  color: var(--noosphere-cyan) !important;
+}
+
+/* ═══ SUGGESTIONS ═══ */
+#suggestions,
+.suggestions,
+.suggest {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  padding: 12px !important;
+}
+
+#suggestions a,
+.suggestions a,
+.suggestion-item a {
+  color: var(--cogitator-gold) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+}
+
+#suggestions a:hover,
+.suggestions a:hover {
+  color: var(--noosphere-cyan) !important;
+}
+
+/* ═══ CORRECTIONS ═══ */
+#corrections,
+.correction,
+.spell-check {
+  background-color: rgba(255, 0, 0, 0.05) !important;
+  border-left: 2px solid var(--omnissiah-red) !important;
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+  padding: 10px 14px !important;
+}
+
+#corrections a,
+.correction a {
+  color: var(--cogitator-gold) !important;
+}
+
+/* ═══ IMAGE RESULTS ═══ */
+.image_result,
+.image-result,
+.result-images,
+.img-result {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  padding: 4px !important;
+  transition: all 0.2s ease !important;
+}
+
+.image_result:hover,
+.image-result:hover,
+.result-images:hover,
+.img-result:hover {
+  border-color: var(--omnissiah-red) !important;
+  box-shadow: var(--glow-red) !important;
+}
+
+.image_result img,
+.image-result img,
+.result-images img {
+  border: none !important;
+}
+
+.image_result .title,
+.image-result .title,
+.result-images .title {
+  color: var(--cogitator-gold) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 11px !important;
+}
+
+/* ═══ VIDEO RESULTS ═══ */
+.result-video,
+.video-result,
+.result-videos {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+}
+
+.result-video:hover,
+.video-result:hover {
+  border-color: var(--omnissiah-red) !important;
+  box-shadow: var(--glow-red) !important;
+}
+
+/* ═══ MAP RESULTS ═══ */
+.result-map,
+.map-result {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+}
+
+/* ═══ CODE BLOCKS ═══ */
+code,
+pre,
+.result code,
+.result pre,
+.highlight,
+.code-block {
+  background-color: rgba(0, 191, 191, 0.1) !important;
+  color: var(--noosphere-cyan) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  border: 1px solid var(--noosphere-cyan-dim) !important;
+  border-radius: 0 !important;
+  padding: 2px 6px !important;
+}
+
+pre code,
+.code-block pre {
+  padding: 12px !important;
+  overflow-x: auto !important;
+}
+
+/* ═══ TABLES ═══ */
+table,
+table.data,
+.result table,
+.wikitable {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  border-collapse: collapse !important;
+}
+
+table th,
+table.data th,
+.result table th,
+.wikitable th {
+  background-color: var(--iron-gray) !important;
+  color: var(--cogitator-gold) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  border: 1px solid var(--steel-gray) !important;
+  padding: 8px 12px !important;
+}
+
+table td,
+table.data td,
+.result table td,
+.wikitable td {
+  background-color: var(--iron-dark) !important;
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  border: 1px solid var(--iron-gray) !important;
+  padding: 8px 12px !important;
+}
+
+table tr:hover td,
+table.data tr:hover td,
+.result table tr:hover td {
+  background-color: var(--void-black) !important;
+}
+
+/* ═══ FORMS & INPUTS ═══ */
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="url"],
+textarea,
+select {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--steel-gray) !important;
+  color: var(--sacred-white) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 13px !important;
+  padding: 8px 12px !important;
+  border-radius: 0 !important;
+}
+
+input[type="text"]:focus,
+input[type="search"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--omnissiah-red) !important;
+  box-shadow: var(--glow-red) !important;
+  outline: none !important;
+}
+
+select {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  color: var(--sacred-white) !important;
+  font-family: 'Courier New', monospace !important;
+  cursor: pointer !important;
+}
+
+select option {
+  background-color: var(--iron-dark) !important;
+  color: var(--sacred-white) !important;
+}
+
+/* ═══ BUTTONS ═══ */
+button,
+.btn,
+.button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--steel-gray) !important;
+  color: var(--sacred-white) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  padding: 8px 16px !important;
+  border-radius: 0 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+button:hover,
+.btn:hover,
+.button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover {
+  border-color: var(--omnissiah-red) !important;
+  color: var(--noosphere-cyan) !important;
+  box-shadow: var(--glow-red) !important;
+}
+
+button:active,
+.btn:active,
+input[type="button"]:active {
+  background-color: var(--omnissiah-red-dim) !important;
+}
+
+button:disabled,
+.btn:disabled,
+input[type="button"]:disabled {
+  background-color: var(--iron-dark) !important;
+  color: var(--text-muted) !important;
+  border-color: var(--iron-gray) !important;
+  cursor: not-allowed !important;
+}
+
+/* ═══ LABELS & FIELDSETS ═══ */
+label,
+.field-label {
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+}
+
+fieldset {
+  border: 1px solid var(--iron-gray) !important;
+  background-color: var(--iron-dark) !important;
+  padding: 16px !important;
+}
+
+legend {
+  color: var(--cogitator-gold) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  padding: 0 8px !important;
+}
+
+/* ═══ HORIZONTAL RULES ═══ */
+hr,
+.divider,
+.mech-divider {
+  border: none !important;
+  border-top: 1px solid var(--iron-gray) !important;
+  margin: 16px 0 !important;
+}
+
+/* ═══ BLOCKQUOTES ═══ */
+blockquote,
+.quote {
+  background-color: var(--iron-dark) !important;
+  border-left: 2px solid var(--cogitator-gold) !important;
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  padding: 10px 16px !important;
+  margin: 8px 0 !important;
+}
+
+/* ═══ LISTS ═══ */
+ul,
+ol {
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+li {
+  color: var(--parchment) !important;
+}
+
+/* ═══ DEFINITION LISTS ═══ */
+dt {
+  color: var(--cogitator-gold) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+}
+
+dd {
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+  margin-left: 16px !important;
+}
+
+/* ═══ DETAILS / SUMMARY (Dropdowns) ═══ */
+details {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  padding: 8px 12px !important;
+}
+
+summary {
+  color: var(--cogitator-gold) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  cursor: pointer !important;
+}
+
+summary:hover {
+  color: var(--noosphere-cyan) !important;
+}
+
+/* ═══ TOOLTIPS ═══ */
+[title],
+.tooltip,
+[data-tooltip] {
+  font-family: 'Courier New', monospace !important;
+}
+
+/* ═══ FOOTER ═══ */
+footer,
+#footer,
+.page-footer,
+.main-footer {
+  background-color: var(--void-black) !important;
+  border-top: 1px solid var(--iron-gray) !important;
+  color: var(--parchment-dim) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 11px !important;
+  text-align: center !important;
+  padding: 16px 20px !important;
+}
+
+footer a,
+#footer a,
+.page-footer a {
+  color: var(--cogitator-gold-dim) !important;
+  text-decoration: none !important;
+}
+
+footer a:hover,
+#footer a:hover {
+  color: var(--noosphere-cyan) !important;
+}
+
+/* ═══ OSCAR THEME SPECIFIC ═══ */
+#main,
+.main,
+.container,
+.container-fluid {
+  background-color: var(--void-black) !important;
+}
+
+.navbar,
+.nav-bar,
+.top-bar {
+  background-color: var(--void-black) !important;
+  border-bottom: 1px solid var(--iron-gray) !important;
+}
+
+.nav-item a,
+.navbar a,
+.nav-link {
+  color: var(--parchment-dim) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+}
+
+.nav-item a:hover,
+.navbar a:hover,
+.nav-link:hover {
+  color: var(--noosphere-cyan) !important;
+}
+
+.nav-item.active a,
+.navbar .active a,
+.nav-link.active {
+  color: var(--cogitator-gold) !important;
+  border-bottom: 1px solid var(--omnissiah-red) !important;
+}
+
+/* ═══ OSCAR TEMPLATES: Advanced / Preferences ═══ */
+.panel,
+.card,
+.well,
+.box {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  border-radius: 0 !important;
+}
+
+.panel-heading,
+.card-header,
+.box-header {
+  background-color: var(--iron-gray) !important;
+  color: var(--cogitator-gold) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  padding: 10px 14px !important;
+  border-bottom: 1px solid var(--steel-gray) !important;
+}
+
+.panel-body,
+.card-body,
+.box-body {
+  background-color: var(--iron-dark) !important;
+  color: var(--parchment) !important;
+  padding: 14px !important;
+}
+
+.panel-footer,
+.card-footer,
+.box-footer {
+  background-color: var(--iron-gray) !important;
+  border-top: 1px solid var(--steel-gray) !important;
+  padding: 10px 14px !important;
+}
+
+/* ═══ PREFERENCES PAGE ═══ */
+.preferences,
+.prefs,
+.settings-page {
+  background-color: var(--void-black) !important;
+  color: var(--sacred-white) !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+.preferences h1,
+.preferences h2,
+.preferences h3,
+.prefs h1,
+.prefs h2,
+.prefs h3 {
+  color: var(--cogitator-gold) !important;
+  font-family: 'Courier New', monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  border-bottom: 1px solid var(--iron-gray) !important;
+  padding-bottom: 8px !important;
+}
+
+.preferences table,
+.prefs table {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+}
+
+.preferences table th,
+.prefs table th {
+  background-color: var(--iron-gray) !important;
+  color: var(--cogitator-gold) !important;
+}
+
+.preferences table td,
+.prefs table td {
+  background-color: var(--iron-dark) !important;
+  color: var(--parchment) !important;
+}
+
+/* ═══ STATS / ABOUT PAGE ═══ */
+.stat,
+.stat-item,
+.about-page,
+.stats-page {
+  background-color: var(--iron-dark) !important;
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+.stat-value,
+.stat-number {
+  color: var(--cogitator-gold) !important;
+  font-weight: bold !important;
+}
+
+.stat-label {
+  color: var(--parchment-dim) !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+}
+
+/* ═══ ERROR / WARNING MESSAGES ═══ */
+.error,
+.alert-danger,
+.message-error,
+.danger,
+.warning,
+.alert-warning {
+  background-color: rgba(255, 0, 0, 0.05) !important;
+  border: 1px solid var(--omnissiah-red) !important;
+  border-left: 3px solid var(--omnissiah-red) !important;
+  color: var(--sacred-white) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  padding: 12px 16px !important;
+}
+
+.info,
+.alert-info,
+.message-info {
+  background-color: rgba(0, 191, 191, 0.05) !important;
+  border: 1px solid var(--noosphere-cyan-dim) !important;
+  border-left: 3px solid var(--noosphere-cyan) !important;
+  color: var(--sacred-white) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  padding: 12px 16px !important;
+}
+
+.success,
+.alert-success,
+.message-success {
+  background-color: rgba(0, 191, 100, 0.05) !important;
+  border: 1px solid rgba(0, 191, 100, 0.3) !important;
+  border-left: 3px solid #00BF64 !important;
+  color: var(--sacred-white) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  padding: 12px 16px !important;
+}
+
+/* ═══ MODAL / DIALOG ═══ */
+.modal,
+.dialog,
+.popup,
+.overlay {
+  background-color: rgba(10, 10, 10, 0.95) !important;
+  border: 1px solid var(--iron-gray) !important;
+}
+
+.modal-header,
+.dialog-header {
+  background-color: var(--iron-dark) !important;
+  color: var(--cogitator-gold) !important;
+  font-family: 'Courier New', monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  border-bottom: 1px solid var(--iron-gray) !important;
+}
+
+.modal-body,
+.dialog-body {
+  background-color: var(--iron-dark) !important;
+  color: var(--parchment) !important;
+}
+
+.modal-footer,
+.dialog-footer {
+  background-color: var(--iron-gray) !important;
+  border-top: 1px solid var(--steel-gray) !important;
+}
+
+/* ═══ IFRAME (for embedded content) ═══ */
+iframe {
+  border: 1px solid var(--iron-gray) !important;
+  background-color: var(--void-black) !important;
+}
+
+/* ═══ PROGRESS BARS ═══ */
+progress,
+.progress,
+.progress-bar {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  height: 8px !important;
+  border-radius: 0 !important;
+}
+
+progress::-webkit-progress-bar,
+.progress-bar::-webkit-progress-bar {
+  background-color: var(--iron-dark) !important;
+}
+
+progress::-webkit-progress-value,
+.progress-bar::-webkit-progress-value {
+  background-color: var(--omnissiah-red) !important;
+}
+
+progress::-moz-progress-bar,
+.progress-bar::-moz-progress-bar {
+  background-color: var(--omnissiah-red) !important;
+}
+
+/* ═══ CHECKBOXES & RADIOS ═══ */
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--omnissiah-red) !important;
+}
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar {
+  width: 8px !important;
+  height: 8px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--void-black) !important;
+  border-left: 1px solid var(--iron-gray) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--steel-gray) !important;
+  border: 1px solid var(--iron-gray) !important;
+  border-radius: 0 !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--omnissiah-red-dim) !important;
+  border-color: var(--omnissiah-red) !important;
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--void-black) !important;
+}
+
+/* ═══ AUTOCOMPLETE DROPDOWN ═══ */
+.autocomplete-list,
+.autocomplete-items,
+.suggestions-list {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.autocomplete-item,
+.autocomplete-list li,
+.suggestions-list li {
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  padding: 8px 12px !important;
+  cursor: pointer !important;
+  border-bottom: 1px solid var(--iron-gray) !important;
+}
+
+.autocomplete-item:hover,
+.autocomplete-list li:hover,
+.suggestions-list li:hover,
+.autocomplete-item.active,
+.autocomplete-list li.active {
+  background-color: var(--void-black) !important;
+  color: var(--noosphere-cyan) !important;
+}
+
+/* ═══ PLUGIN: HOSTNAME FILTER ═══ */
+.hostname,
+.hostname-filter,
+.host-filter {
+  color: var(--noosphere-cyan-dim) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 11px !important;
+}
+
+/* ═══ PLUGIN: SELF INFO ═══ */
+.self-info,
+.ip-info,
+.user-info {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 11px !important;
+  padding: 8px 12px !important;
+}
+
+/* ═══ ENGINE STATS / RESPONSE TIME ═══ */
+.engine-stats,
+.response-time,
+.time,
+.result time,
+.result .time {
+  color: var(--parchment-dim) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 10px !important;
+}
+
+/* ═══ OPEN ACCESS DOI ═══ */
+.doi,
+.doi-link,
+.open-access {
+  color: var(--noosphere-cyan) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 11px !important;
+}
+
+/* ═══ TRACKER REMOVER INFO ═══ */
+.tracker-info,
+.tracker-removed {
+  color: var(--parchment-dim) !important;
+  font-size: 10px !important;
+}
+
+/* ═══ PRINT STYLES ═══ */
+@media print {
+  body {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+  }
+  
+  body::after {
+    display: none !important;
+  }
+  
+  .result {
+    border: 1px solid #CCCCCC !important;
+  }
+}
+
+/* ═══ RESPONSIVE OVERRIDES ═══ */
+@media (max-width: 768px) {
+  #search_header,
+  .search-header {
+    padding: 12px 16px !important;
+  }
+  
+  .result,
+  .search-result {
+    padding: 10px 12px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  .category,
+  .nav-tab,
+  .tab {
+    padding: 6px 12px !important;
+    font-size: 11px !important;
+  }
+  
+  #results,
+  .results {
+    padding: 12px !important;
+  }
+}
+
+/* ═══ ANIMATED LOADING INDICATOR ═══ */
+.loading,
+.loader,
+.spinner,
+.processing {
+  color: var(--cogitator-gold) !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+/* ═══ HIDE UNWANTED ELEMENTS ═══ */
+.ad,
+.ads,
+.advertisement,
+.tracking-pixel {
+  display: none !important;
+}
+
+/* ═══ HIGHLIGHTED SEARCH TERMS ═══ */
+mark,
+.highlight,
+.search-highlight,
+.strong,
+strong {
+  background-color: rgba(200, 168, 75, 0.2) !important;
+  color: var(--cogitator-gold) !important;
+  font-weight: bold !important;
+  padding: 0 2px !important;
+}
+
+/* ═══ RESULT META INFO ═══ */
+.result-meta,
+.result .meta,
+.meta-info,
+.result-info {
+  color: var(--parchment-dim) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 10px !important;
+}
+
+/* ═══ ANCHOR LINKS ═══ */
+a[href^="#"] {
+  color: var(--noosphere-cyan-dim) !important;
+}
+
+/* ═══ EXTERNAL LINK INDICATOR ═══ */
+a[target="_blank"]::after,
+a.external::after {
+  content: ' \2197' !important;
+  color: var(--parchment-dim) !important;
+  font-size: 10px !important;
+}
+
+/* ═══ BREADCRUMBS ═══ */
+.breadcrumb,
+.breadcrumbs,
+.nav-path {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  color: var(--parchment-dim) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 11px !important;
+  padding: 8px 12px !important;
+}
+
+.breadcrumb a,
+.breadcrumbs a {
+  color: var(--cogitator-gold) !important;
+}
+
+.breadcrumb .active,
+.breadcrumbs .active {
+  color: var(--parchment) !important;
+}
+
+/* ═══ TOGGLE SWITCHES ═══ */
+.toggle,
+.switch {
+  background-color: var(--iron-gray) !important;
+  border: 1px solid var(--steel-gray) !important;
+}
+
+.toggle.active,
+.switch.active,
+.toggle:checked,
+.switch:checked {
+  background-color: var(--omnissiah-red-dim) !important;
+  border-color: var(--omnissiah-red) !important;
+}
+
+/* ═══ TOOLBAR ═══ */
+.toolbar,
+.action-bar,
+.top-toolbar {
+  background-color: var(--void-black) !important;
+  border-bottom: 1px solid var(--iron-gray) !important;
+  padding: 8px 16px !important;
+}
+
+.toolbar button,
+.action-bar button,
+.toolbar .btn {
+  padding: 6px 12px !important;
+  font-size: 11px !important;
+}
+
+/* ═══ LANGUAGE SELECTOR ═══ */
+.language-selector,
+.lang-select {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 11px !important;
+}
+
+/* ═══ SAFE SEARCH INDICATOR ═══ */
+.safe-search,
+.safesearch {
+  color: var(--parchment-dim) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 10px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+}
+
+/* ═══ RESULT COUNTS ═══ */
+.result-count,
+.result-number,
+.count,
+#result_count {
+  color: var(--cogitator-gold) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+}
+
+/* ═══ NO RESULTS MESSAGE ═══ */
+.no-results,
+.empty-result,
+.noresult {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--omnissiah-red-dim) !important;
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 13px !important;
+  padding: 24px !important;
+  text-align: center !important;
+}
+
+.no-results::before,
+.empty-result::before {
+  content: '\26A0 ' !important;
+  color: var(--omnissiah-red) !important;
+}
+
+/* ═══ SEARCH TIME INFO ═══ */
+.search-time,
+.query-time,
+.timing {
+  color: var(--parchment-dim) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 10px !important;
+}
+
+/* ═══ SOCIAL MEDIA RESULTS ═══ */
+.result-social,
+.social-result {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+}
+
+.result-social:hover,
+.social-result:hover {
+  border-color: var(--noosphere-cyan) !important;
+  box-shadow: var(--glow-cyan) !important;
+}
+
+/* ═══ MUSIC RESULTS ═══ */
+.result-music,
+.music-result {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+}
+
+.result-music:hover,
+.music-result:hover {
+  border-color: var(--cogitator-gold) !important;
+  box-shadow: var(--glow-gold) !important;
+}
+
+/* ═══ NEWS RESULTS ═══ */
+.result-news,
+.news-result {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+}
+
+.result-news:hover,
+.news-result:hover {
+  border-color: var(--omnissiah-red) !important;
+}
+
+.news-date,
+.result-news time,
+.news-result time {
+  color: var(--parchment-dim) !important;
+  font-size: 10px !important;
+}
+
+/* ═══ FILE RESULTS ═══ */
+.result-files,
+.file-result {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+}
+
+.file-size,
+.file-type,
+.result-files .size {
+  color: var(--parchment-dim) !important;
+  font-size: 10px !important;
+}
+
+/* ═══ IT CALCULATOR ═══ */
+.calculator,
+.calc-result {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--noosphere-cyan-dim) !important;
+  color: var(--noosphere-cyan) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 18px !important;
+  padding: 16px !important;
+}
+
+/* ═══ WEATHER WIDGET ═══ */
+.weather,
+.weather-result {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--iron-gray) !important;
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+.weather-temp {
+  color: var(--cogitator-gold) !important;
+  font-size: 24px !important;
+  font-weight: bold !important;
+}
+
+/* ═══ TRANSLATION RESULTS ═══ */
+.translation,
+.translate-result {
+  background-color: var(--iron-dark) !important;
+  border: 1px solid var(--noosphere-cyan-dim) !important;
+  color: var(--parchment) !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+/* ═══ FINAL SANCTIFICATION ═══ */
+/* Ensure all text inherits sacred font */
+* {
+  font-family: 'Courier New', Consolas, 'Lucida Console', monospace;
+}
+
+/* Except these elements which need their own fonts */
+code *,
+pre *,
+.code-block *,
+.hljs *,
+tt *,
+kbd *,
+samp * {
+  font-family: 'Courier New', monospace !important;
+}
+
+/* ═══ END OF COGITATOR THEME ═══
+   Praise the Omnissiah. The Machine Spirit is appeased.
+   Noosphere connection established.
+   ═══════════════════════════════════════════════════════════════ */

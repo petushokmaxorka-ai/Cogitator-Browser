@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOSPHERE — Noospheric Search</title>
+  <style>
+    /* ═══ ROOT ═══ */
+    :root {
+      --void-black: #000000;
+      --iron-dark: #1E1E1E;
+      --iron-gray: #2A2A2A;
+      --steel-gray: #3A3A3A;
+      --omnissiah-red: #FF0000;
+      --omnissiah-red-dim: #8B0000;
+      --cogitator-gold: #C8A84B;
+      --cogitator-gold-dim: #8B7355;
+      --noosphere-cyan: #00BFBF;
+      --parchment: #D4C5A0;
+      --parchment-dim: #8B7D6B;
+      --sacred-white: #E8E8E8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes pulse-red {
+      0%, 100% { opacity: 0.4; box-shadow: 0 0 6px rgba(255,0,0,0.2); }
+      50%      { opacity: 1;   box-shadow: 0 0 18px rgba(255,0,0,0.6); }
+    }
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scanline {
+      0%   { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+
+    body {
+      background: var(--void-black);
+      color: var(--sacred-white);
+      font-family: 'Courier New', Courier, monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ═══ Background effects (from v1 design) ═══ */
+    .bg-glow {
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse at 50% 30%, rgba(30,30,30,0.85) 0%, transparent 65%);
+      pointer-events: none; z-index: 0;
+    }
+    .bg-grid {
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(42,42,42,0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(42,42,42,0.12) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none; z-index: 0;
+    }
+    .scanline {
+      position: fixed; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, transparent, rgba(255,0,0,0.15), transparent);
+      animation: scanline 6s linear infinite;
+      pointer-events: none; z-index: 100;
+    }
+
+    /* ═══ Layout ═══ */
+    .container {
+      position: relative; z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* ═══ Header (from v1 design) ═══ */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .header-cog {
+      width: 64px; height: 64px;
+      border: 3px solid var(--cogitator-gold);
+      border-radius: 50%;
+      border-top-color: var(--omnissiah-red);
+      animation: spin 8s linear infinite;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+    .header-cog::after {
+      content: '';
+      position: absolute; inset: 10px;
+      border: 2px solid var(--cogitator-gold-dim);
+      border-radius: 50%;
+      border-bottom-color: transparent;
+      animation: spin 4s linear infinite reverse;
+    }
+    .header h1 {
+      font-size: 42px;
+      color: var(--cogitator-gold);
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      text-shadow: 0 0 8px rgba(200, 168, 75, 0.5), 0 0 16px rgba(200, 168, 75, 0.3), 0 0 32px rgba(200, 168, 75, 0.1);
+      margin-bottom: 6px;
+    }
+    .header p {
+      font-size: 12px;
+      color: var(--cogitator-gold-dim);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    /* ═══ Search bar (from v1 design) ═══ */
+    .search-section {
+      margin-bottom: 24px;
+    }
+    .search-box {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--omnissiah-red-dim);
+      background: var(--iron-dark);
+      transition: all 0.3s;
+      position: relative;
+      box-shadow: 0 0 6px rgba(139, 0, 0, 0.15);
+    }
+    .search-box::before,
+    .search-box::after {
+      content: '';
+      position: absolute;
+      width: 10px; height: 10px;
+      border-color: var(--omnissiah-red);
+      border-style: solid;
+      pointer-events: none;
+      transition: all 0.3s;
+    }
+    .search-box::before {
+      top: -1px; left: -1px;
+      border-width: 2px 0 0 2px;
+    }
+    .search-box::after {
+      bottom: -1px; right: -1px;
+      border-width: 0 2px 2px 0;
+    }
+    .search-box:focus-within {
+      border-color: var(--omnissiah-red);
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.2), 0 0 20px rgba(255, 0, 0, 0.1), inset 0 0 4px rgba(255, 0, 0, 0.05);
+    }
+    .search-box:focus-within::before,
+    .search-box:focus-within::after {
+      width: 16px; height: 16px;
+    }
+
+    /* mech-rivets for search */
+    .search-section { position: relative; }
+    .search-section::before,
+    .search-section::after {
+      content: '◉'; position: absolute; top: 2px;
+      font-size: 8px; color: var(--steel-gray); pointer-events: none; z-index: 2;
+    }
+    .search-section::before { left: 4px; }
+    .search-section::after  { right: 4px; }
+    .search-box input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--sacred-white);
+      padding: 16px 20px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 16px;
+      outline: none;
+    }
+    .search-box input::placeholder {
+      color: var(--cogitator-gold-dim);
+    }
+    .search-box button {
+      background: linear-gradient(135deg, var(--omnissiah-red-dim), var(--iron-dark));
+      color: var(--sacred-white);
+      border: 1px solid var(--omnissiah-red);
+      padding: 0 28px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .search-box button:hover {
+      background: linear-gradient(135deg, var(--omnissiah-red), var(--omnissiah-red-dim));
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.25), 0 0 20px rgba(255, 0, 0, 0.1);
+    }
+
+    /* Autocomplete (from v2) */
+    .suggestions {
+      background: var(--iron-dark);
+      border: 1px solid var(--iron-gray);
+      border-top: none;
+      max-height: 200px;
+      overflow-y: auto;
+      display: none;
+    }
+    .suggestions.active { display: block; }
+    .suggestion-item {
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--parchment-dim);
+      transition: all 0.15s;
+    }
+    .suggestion-item:hover, .suggestion-item.active {
+      background: rgba(200, 168, 75, 0.1);
+      color: var(--cogitator-gold);
+    }
+
+    /* ═══ Filters (from v2) ═══ */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--iron-gray);
+    }
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .filter-group label {
+      font-size: 11px;
+      color: var(--cogitator-gold-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .filter-group select {
+      background: var(--iron-dark);
+      border: 1px solid var(--iron-gray);
+      color: var(--sacred-white);
+      padding: 6px 10px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+    }
+    .filter-group select:focus {
+      border-color: var(--cogitator-gold);
+    }
+
+    /* ═══ Meta bar (from v2) ═══ */
+    .meta-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 12px;
+      color: var(--steel-gray);
+    }
+    .meta-bar .error {
+      color: var(--omnissiah-red);
+      animation: pulse-red 2s infinite;
+    }
+    .meta-bar .ok {
+      color: var(--omnissiah-red);
+      animation: pulse-red 2s infinite;
+    }
+    .meta-bar .warn {
+      color: var(--cogitator-gold);
+    }
+
+    /* ═══ Loader ═══ */
+    .loader {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .loader-spinner {
+      width: 40px; height: 40px;
+      border: 2px solid var(--iron-gray);
+      border-top: 2px solid var(--cogitator-gold);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+    .loader p {
+      color: var(--cogitator-gold-dim);
+      font-size: 13px;
+      letter-spacing: 2px;
+    }
+
+    /* ═══ Results (from v2) ═══ */
+    .results { display: none; }
+    .results.active { display: block; }
+
+    .result-card {
+      background: rgba(30, 30, 30, 0.6);
+      border: 1px solid var(--iron-gray);
+      padding: 20px;
+      margin-bottom: 16px;
+      animation: fade-in 0.4s ease-out;
+      transition: all 0.25s;
+      position: relative;
+    }
+    /* gradient top line like mech-panel */
+    .result-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, var(--omnissiah-red), var(--cogitator-gold), var(--noosphere-cyan), transparent);
+      opacity: 0.4;
+      transition: opacity 0.25s;
+    }
+    .result-card:hover {
+      border-color: var(--omnissiah-red);
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.3), 0 0 20px rgba(255, 0, 0, 0.15);
+      transform: translateX(4px);
+    }
+    .result-card:hover::before { opacity: 1; }
+    /* mech-rivets on result cards */
+    .result-card::after {
+      content: '◉';
+      position: absolute;
+      top: 4px; right: 8px;
+      font-size: 8px;
+      color: var(--steel-gray);
+      pointer-events: none;
+    }
+    .result-card:hover::after { color: var(--omnissiah-red); }
+    .result-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .result-title a {
+      color: var(--cogitator-gold);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .result-title a:hover {
+      color: var(--omnissiah-red);
+      text-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
+    }
+    .result-url {
+      font-size: 11px;
+      color: var(--noosphere-cyan);
+      margin-bottom: 8px;
+      word-break: break-all;
+    }
+    .result-content {
+      font-size: 13px;
+      color: var(--parchment-dim);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .result-engines {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .engine-tag {
+      font-size: 10px;
+      color: var(--cogitator-gold-dim);
+      background: rgba(200, 168, 75, 0.08);
+      border: 1px solid rgba(200, 168, 75, 0.2);
+      padding: 2px 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ═══ Pagination (from v2) ═══ */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--iron-gray);
+    }
+    .pagination button {
+      background: var(--iron-dark);
+      border: 1px solid var(--iron-gray);
+      color: var(--parchment-dim);
+      padding: 8px 14px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .pagination button:hover:not(:disabled) {
+      border-color: var(--cogitator-gold);
+      color: var(--cogitator-gold);
+    }
+    .pagination button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    .pagination button.current {
+      background: var(--cogitator-gold);
+      color: var(--void-black);
+      border-color: var(--cogitator-gold);
+    }
+
+    /* ═══ Empty / Error states ═══ */
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--steel-gray);
+    }
+    .empty-state h2 {
+      color: var(--cogitator-gold-dim);
+      font-size: 18px;
+      margin-bottom: 12px;
+      letter-spacing: 3px;
+    }
+    .empty-state p {
+      font-size: 13px;
+    }
+
+    /* ═══ Footer (from v1) ═══ */
+    .footer {
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 10px;
+      color: var(--steel-gray);
+      border-top: 1px solid var(--iron-gray);
+      margin-top: 40px;
+      letter-spacing: 1px;
+    }
+
+    /* ═══ Scrollbar ═══ */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--void-black); }
+    ::-webkit-scrollbar-thumb { background: var(--iron-gray); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--cogitator-gold); }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+  <div class="scanline"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-cog"></div>
+      <h1>Noosphere</h1>
+      <p>Noospheric Search Engine of the Omnissiah</p>
+      <div style="margin-top: 12px; font-size: 10px; color: var(--steel-gray); letter-spacing: 2px;">
+      ══════════════════════════════════════════
+    </div>
+    </div>
+
+    <!-- Search -->
+    <div class="search-section">
+      <div class="search-box">
+        <input id="searchInput" type="text" placeholder="Query the Noosphere..." autocomplete="off" />
+        <button id="searchBtn">Search</button>
+      </div>
+      <div id="suggestions" class="suggestions"></div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <div class="filter-group">
+        <label>Category</label>
+        <select id="categoryFilter">
+          <option value="general">General</option>
+          <option value="images">Images</option>
+          <option value="news">News</option>
+          <option value="files">Files</option>
+          <option value="it">IT</option>
+          <option value="science">Science</option>
+          <option value="social media">Social Media</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Language</label>
+        <select id="langFilter">
+          <option value="">All</option>
+          <option value="ru-RU">Russian</option>
+          <option value="en-US">English</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Safe</label>
+        <select id="safeFilter">
+          <option value="0">Off</option>
+          <option value="1">Moderate</option>
+          <option value="2">Strict</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Meta -->
+    <div id="metaBar" class="meta-bar" style="display:none;">
+      <span id="metaInfo"></span>
+      <span id="metaStatus" class="ok">SearXNG connected</span>
+    </div>
+
+    <!-- Loader -->
+    <div id="loader" class="loader" style="display:none;">
+      <div class="loader-spinner"></div>
+      <p>Consulting the Noosphere...</p>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="results"></div>
+
+    <!-- Empty / Error -->
+    <div id="emptyState" class="empty-state" style="display:none;">
+      <h2 id="emptyTitle">The Noosphere awaits your query</h2>
+      <p id="emptyText">Enter a search term above to begin.</p>
+    </div>
+
+    <!-- Pagination -->
+    <div id="pagination" class="pagination" style="display:none;"></div>
+  </div>
+
+  <div class="footer">
+    Blessed by the Omnissiah · Sanctified for the Machine Cult · Powered by SearXNG
+  </div>
+
+  <script>
+    // ═══ Config ═══
+    const BACKEND_URL = 'http://127.0.0.1:8080';
+
+    // ═══ DOM refs ═══
+    const input = document.getElementById('searchInput');
+    const btn = document.getElementById('searchBtn');
+    const suggestionsEl = document.getElementById('suggestions');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const langFilter = document.getElementById('langFilter');
+    const safeFilter = document.getElementById('safeFilter');
+    const metaBar = document.getElementById('metaBar');
+    const metaInfo = document.getElementById('metaInfo');
+    const metaStatus = document.getElementById('metaStatus');
+    const loader = document.getElementById('loader');
+    const resultsEl = document.getElementById('results');
+    const emptyState = document.getElementById('emptyState');
+    const emptyTitle = document.getElementById('emptyTitle');
+    const emptyText = document.getElementById('emptyText');
+    const paginationEl = document.getElementById('pagination');
+
+    // ═══ State ═══
+    let currentQuery = '';
+    let currentPage = 1;
+    let suggestionIndex = -1;
+    let abortCtrl = null;
+
+    // ═══ Helpers ═══
+    function showLoader() {
+      loader.style.display = 'block';
+      resultsEl.classList.remove('active');
+      resultsEl.innerHTML = '';
+      paginationEl.style.display = 'none';
+      emptyState.style.display = 'none';
+      metaBar.style.display = 'none';
+    }
+    function hideLoader() {
+      loader.style.display = 'none';
+    }
+    function showEmpty(title, text) {
+      emptyTitle.textContent = title;
+      emptyText.textContent = text;
+      emptyState.style.display = 'block';
+      resultsEl.classList.remove('active');
+      paginationEl.style.display = 'none';
+      metaBar.style.display = 'flex';
+    }
+    function showError(msg) {
+      metaStatus.textContent = msg;
+      metaStatus.className = 'error';
+      showEmpty('The Noosphere is silent', msg);
+    }
+
+    // ═══ Build search URL ═══
+    function buildUrl(q, page) {
+      const params = new URLSearchParams();
+      params.set('q', q);
+      params.set('format', 'json');
+      params.set('pageno', String(page));
+      const cat = categoryFilter.value;
+      if (cat && cat !== 'general') params.set('categories', cat);
+      const lang = langFilter.value;
+      if (lang) params.set('language', lang);
+      params.set('safesearch', safeFilter.value);
+      return BACKEND_URL + '/search?' + params.toString();
+    }
+
+    // ═══ Render results ═══
+    function renderResults(data) {
+      hideLoader();
+      resultsEl.innerHTML = '';
+
+      const unresponsive = data.unresponsive_engines || [];
+      const results = data.results || [];
+
+      if (results.length === 0) {
+        let hint = 'The Noosphere returned no results for this query.';
+        if (unresponsive.length > 0) {
+          hint = 'Engines offline or timed out: ' + unresponsive.join(', ') + '. Try General category or check SearXNG.';
+        }
+        showEmpty('No signals detected', hint);
+        if (unresponsive.length > 0) {
+          metaStatus.textContent = unresponsive.length + ' engine(s) unresponsive';
+          metaStatus.className = 'error';
+          metaBar.style.display = 'flex';
+        }
+        return;
+      }
+
+      const count = results.length;
+      const engines = data.engines && data.engines.length > 0
+        ? ' via ' + data.engines.join(', ')
+        : '';
+      metaInfo.textContent = count + ' result' + (count !== 1 ? 's' : '') + engines;
+      if (unresponsive.length > 0) {
+        metaStatus.textContent = 'Partial — ' + unresponsive.length + ' engine(s) timed out';
+        metaStatus.className = 'warn';
+      } else {
+        metaStatus.textContent = 'SearXNG connected';
+        metaStatus.className = 'ok';
+      }
+      metaBar.style.display = 'flex';
+
+      results.forEach((r, i) => {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.style.animationDelay = (i * 0.05) + 's';
+
+        const title = document.createElement('div');
+        title.className = 'result-title';
+        const link = document.createElement('a');
+        link.href = r.url || '#';
+        link.textContent = r.title || 'Untitled';
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (r.url) window.location.href = r.url;
+        });
+        title.appendChild(link);
+
+        const url = document.createElement('div');
+        url.className = 'result-url';
+        url.textContent = r.url || '';
+
+        const content = document.createElement('div');
+        content.className = 'result-content';
+        content.textContent = r.content || '';
+
+        const enginesDiv = document.createElement('div');
+        enginesDiv.className = 'result-engines';
+        (r.engines || [r.engine]).forEach(eng => {
+          const tag = document.createElement('span');
+          tag.className = 'engine-tag';
+          tag.textContent = eng;
+          enginesDiv.appendChild(tag);
+        });
+
+        card.appendChild(title);
+        card.appendChild(url);
+        card.appendChild(content);
+        card.appendChild(enginesDiv);
+        resultsEl.appendChild(card);
+      });
+
+      resultsEl.classList.add('active');
+      renderPagination();
+    }
+
+    // ═══ Pagination ═══
+    function renderPagination() {
+      paginationEl.innerHTML = '';
+      paginationEl.style.display = 'flex';
+
+      const prev = document.createElement('button');
+      prev.textContent = '« Prev';
+      prev.disabled = currentPage <= 1;
+      prev.onclick = () => { currentPage--; doSearch(); };
+      paginationEl.appendChild(prev);
+
+      const maxPage = Math.max(currentPage + 1, currentPage);
+      for (let p = 1; p <= maxPage; p++) {
+        const b = document.createElement('button');
+        b.textContent = String(p);
+        if (p === currentPage) b.classList.add('current');
+        b.onclick = () => { currentPage = p; doSearch(); };
+        paginationEl.appendChild(b);
+      }
+
+      const next = document.createElement('button');
+      next.textContent = 'Next »';
+      next.onclick = () => { currentPage++; doSearch(); };
+      paginationEl.appendChild(next);
+    }
+
+    // ═══ Search ═══
+    async function doSearch() {
+      const q = input.value.trim();
+      if (!q) return;
+      currentQuery = q;
+      showLoader();
+
+      if (abortCtrl) abortCtrl.abort();
+      abortCtrl = new AbortController();
+
+      try {
+        const res = await fetch(buildUrl(q, currentPage), {
+          signal: abortCtrl.signal,
+          headers: { 'Accept': 'application/json' }
+        });
+        if (!res.ok) {
+          showError('HTTP ' + res.status + ' — SearXNG denied the request');
+          return;
+        }
+        const data = await res.json();
+        renderResults(data);
+        updateUrl();
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          showError('Connection failed — SearXNG may be offline');
+        }
+      }
+    }
+
+    // ═══ Suggestions ═══
+    async function fetchSuggestions(q) {
+      if (!q) { suggestionsEl.classList.remove('active'); return; }
+      try {
+        const res = await fetch(BACKEND_URL + '/autocomplete?q=' + encodeURIComponent(q));
+        if (!res.ok) return;
+        const list = await res.json();
+        if (!list || list.length === 0) { suggestionsEl.classList.remove('active'); return; }
+        suggestionsEl.innerHTML = '';
+        list.forEach((s, i) => {
+          const div = document.createElement('div');
+          div.className = 'suggestion-item';
+          div.textContent = s;
+          div.onclick = () => { input.value = s; suggestionsEl.classList.remove('active'); doSearch(); };
+          div.dataset.index = String(i);
+          suggestionsEl.appendChild(div);
+        });
+        suggestionsEl.classList.add('active');
+        suggestionIndex = -1;
+      } catch {
+        suggestionsEl.classList.remove('active');
+      }
+    }
+
+    let sugTimeout = null;
+    input.addEventListener('input', () => {
+      clearTimeout(sugTimeout);
+      sugTimeout = setTimeout(() => fetchSuggestions(input.value.trim()), 200);
+    });
+    input.addEventListener('keydown', (e) => {
+      const items = suggestionsEl.querySelectorAll('.suggestion-item');
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        suggestionIndex = Math.min(suggestionIndex + 1, items.length - 1);
+        updateSuggestionHighlight(items);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        suggestionIndex = Math.max(suggestionIndex - 1, -1);
+        updateSuggestionHighlight(items);
+      } else if (e.key === 'Enter') {
+        if (suggestionIndex >= 0 && items[suggestionIndex]) {
+          input.value = items[suggestionIndex].textContent;
+        }
+        suggestionsEl.classList.remove('active');
+        currentPage = 1;
+        doSearch();
+      } else if (e.key === 'Escape') {
+        suggestionsEl.classList.remove('active');
+      }
+    });
+    function updateSuggestionHighlight(items) {
+      items.forEach((it, i) => it.classList.toggle('active', i === suggestionIndex));
+    }
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.search-section')) suggestionsEl.classList.remove('active');
+    });
+
+    // ═══ URL state ═══
+    function updateUrl() {
+      const params = new URLSearchParams();
+      params.set('q', currentQuery);
+      if (currentPage > 1) params.set('page', String(currentPage));
+      if (categoryFilter.value !== 'general') params.set('category', categoryFilter.value);
+      if (langFilter.value) params.set('lang', langFilter.value);
+      if (safeFilter.value !== '0') params.set('safe', safeFilter.value);
+      history.replaceState(null, '', '?' + params.toString());
+    }
+    function loadFromUrl() {
+      const params = new URLSearchParams(location.search);
+      const q = params.get('q');
+      if (!q) {
+        showEmpty('The Noosphere awaits your query', 'Enter a search term above to begin.');
+        return;
+      }
+      input.value = q;
+      currentPage = parseInt(params.get('page') || '1', 10) || 1;
+      if (params.get('category')) categoryFilter.value = params.get('category');
+      if (params.get('lang')) langFilter.value = params.get('lang');
+      if (params.get('safe')) safeFilter.value = params.get('safe');
+      doSearch();
+    }
+
+    // ═══ Event bindings ═══
+    btn.addEventListener('click', () => { currentPage = 1; doSearch(); });
+    [categoryFilter, langFilter, safeFilter].forEach(el => {
+      el.addEventListener('change', () => { if (currentQuery) { currentPage = 1; doSearch(); } });
+    });
+
+    // ═══ Utils ═══
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ═══ Init ═══
+    loadFromUrl();
+  </script>
+</body>
+</html>

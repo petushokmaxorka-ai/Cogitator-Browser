@@ -1,0 +1,103 @@
+{
+  "name": "cogitator-browser",
+  "version": "2.1.0",
+  "description": "COGITATOR BROWSER — Dark Mechanicus AI Browser with local Ollama",
+  "main": "./out/main/index.js",
+  "author": "Heretic OS",
+  "homepage": "https://heretic-os.dev",
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
+    "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "test": "vitest run src/main/tests/",
+    "start": "electron-vite preview",
+    "dev": "electron-vite dev",
+    "build": "npm run typecheck && electron-vite build",
+    "postinstall": "electron-builder install-app-deps",
+    "build:unpack": "npm run build && electron-builder --dir",
+    "build:win": "npm run build && electron-builder --win",
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:linux": "npm run build && electron-builder --linux"
+  },
+  "dependencies": {
+    "@cliqz/adblocker-electron": "^1.27.11",
+    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/utils": "^3.0.0",
+    "@types/imap": "^0.8.43",
+    "@types/mailparser": "^3.4.6",
+    "@types/nodemailer": "^8.0.0",
+    "darkreader": "^4.9.125",
+    "electron-updater": "^6.1.7",
+    "gifshot": "^0.4.5",
+    "imap": "^0.8.19",
+    "jsqr": "^1.4.0",
+    "lucide-react": "^0.460.0",
+    "mailparser": "^3.9.9",
+    "node-forge": "^1.3.1",
+    "nodemailer": "^8.0.10",
+    "ollama": "^0.5.9",
+    "systeminformation": "^5.31.7",
+    "tesseract.js": "^7.0.0",
+    "webtorrent": "^3.0.16"
+  },
+  "devDependencies": {
+    "@electron-toolkit/eslint-config-prettier": "^2.0.0",
+    "@electron-toolkit/eslint-config-ts": "^1.0.1",
+    "@electron-toolkit/tsconfig": "^1.0.1",
+    "@types/node": "^20.14.8",
+    "@types/node-forge": "^1.3.11",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "electron-vite": "^2.3.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.3",
+    "postcss": "^8.4.47",
+    "prettier": "^3.3.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.5.2",
+    "vite": "^5.3.1",
+    "vitest": "^4.1.10"
+  },
+  "build": {
+    "productName": "CogitatorBrowser",
+    "appId": "dev.heretic-os.cogitator",
+    "asar": false,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "out",
+      "resources"
+    ],
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "Network"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.utilities"
+    },
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
+  }
+}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline';" />
+  <title>Cogitator Browser</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000000;
+      color: #e8e8e8;
+      font-family: "Courier New", Courier, monospace;
+      user-select: none;
+      -webkit-app-region: drag;
+    }
+    .frame {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #3a3a3a;
+      background: #000000;
+      position: relative;
+      overflow: hidden;
+    }
+    .bg-glow {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 30%, rgba(30,30,30,0.85) 0%, transparent 65%);
+      pointer-events: none; z-index: 0;
+    }
+    .scanline-move {
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(255,0,0,0.15), transparent);
+      animation: scanline 6s linear infinite;
+      pointer-events: none; z-index: 2;
+    }
+    @keyframes scanline {
+      0%   { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes spin-rev {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+    .frame::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #8b0000, #c8a84b, transparent);
+    }
+    .body {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 20px 32px 12px;
+      position: relative;
+      z-index: 3;
+    }
+    /* Noosphere-style dual-ring cog */
+    .header-cog {
+      width: 52px;
+      height: 52px;
+      border: 2px solid #c8a84b;
+      border-radius: 50%;
+      border-top-color: #dc2626;
+      animation: spin 8s linear infinite;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .header-cog::after {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border: 2px solid #8b7355;
+      border-radius: 50%;
+      border-bottom-color: transparent;
+      animation: spin-rev 4s linear infinite;
+    }
+    .titles { min-width: 0; }
+    .title {
+      font-size: 18px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #c8a84b;
+    }
+    .subtitle {
+      margin-top: 6px;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #888;
+    }
+    .status {
+      margin-top: 8px;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      color: #666;
+      text-transform: uppercase;
+    }
+    .progress-wrap {
+      padding: 0 32px 20px;
+      position: relative;
+      z-index: 3;
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 8px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 6px;
+    }
+    .progress-meta span:last-child { color: #dc2626; }
+    .progress-track {
+      width: 100%;
+      height: 3px;
+      background: #1a1a1a;
+      border: 1px solid #3a3a3a;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #8b0000, #dc2626);
+      box-shadow: 0 0 6px rgba(220, 38, 38, 0.6);
+      transition: width 0.12s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="bg-glow"></div>
+    <div class="scanline-move"></div>
+    <div class="body">
+      <div class="header-cog"></div>
+      <div class="titles">
+        <div class="title">Cogitator Browser</div>
+        <div class="subtitle">Sacred instrument of the Omnissiah</div>
+        <div class="status" id="status">Invoking machine spirit...</div>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span>Boot sequence</span>
+        <span id="pct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="bar"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const bar = document.getElementById('bar');
+    const pct = document.getElementById('pct');
+    const status = document.getElementById('status');
+    const labels = [
+      [8, 'Initializing void-black substrate...'],
+      [22, 'Binding privacy engine...'],
+      [38, 'Scanning proxy relays...'],
+      [52, 'Opening session vault...'],
+      [68, 'Registering cogitator protocol...'],
+      [82, 'Loading renderer sanctum...'],
+      [94, 'Awakening tab manager...'],
+      [100, 'Machine spirit online.'],
+    ];
+    window.__setProgress = function setProgress(n) {
+      const v = Math.max(0, Math.min(100, Math.round(n)));
+      bar.style.width = v + '%';
+      pct.textContent = v + '%';
+      for (let i = labels.length - 1; i >= 0; i--) {
+        if (v >= labels[i][0]) {
+          status.textContent = labels[i][1];
+          break;
+        }
+      }
+    };
+    window.__setProgress(0);
+  </script>
+</body>
+</html>
