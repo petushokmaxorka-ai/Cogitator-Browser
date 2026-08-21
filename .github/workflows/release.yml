@@ -39,8 +39,33 @@ jobs:
             release/latest-linux.yml
           if-no-files-found: error
 
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+          cache: npm
+      - run: npm ci --ignore-scripts
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Package (never publish — softprops job is the sole publisher)
+        run: npx electron-builder --win --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cogitator-windows
+          path: |
+            release/*.exe
+            release/*.zip
+            release/latest.yml
+          if-no-files-found: error
+
   publish:
-    needs: [build-linux]
+    needs: [build-linux, build-windows]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
@@ -53,6 +78,7 @@ jobs:
         with:
           files: |
             dist/cogitator-linux/*
+            dist/cogitator-windows/*
           generate_release_notes: true
           prerelease: true
           fail_on_unmatched_files: false
