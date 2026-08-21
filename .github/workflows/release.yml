@@ -28,9 +28,9 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build:linux
-        env:
-          # electron-builder downloads its own electron dist for packaging
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # NO GH_TOKEN here on purpose: electron-builder would race the
+        # softprops publish job for release creation (empty release +
+        # "already_exists" failure). Sole publisher = publish job below.
       - uses: actions/upload-artifact@v4
         with:
           name: cogitator-linux
