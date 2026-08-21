@@ -36,6 +36,7 @@ jobs:
           path: |
             release/*.AppImage
             release/*.tar.gz
+            release/latest-linux.yml
           if-no-files-found: error
 
   publish:
