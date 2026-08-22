@@ -368,6 +368,38 @@ export function configurePrivacySession(sess?: Session): void {
       // Remove DNT header (we handle this via other means, and it adds entropy)
       delete headers['DNT'];
 
+      // ── Google sign-in: UA client hints must match the claimed Chrome UA ──
+      // Electron sends "Chromium"-only brands in sec-ch-ua while our UA string
+      // says Chrome — Google flags the mismatch as "browser may not be secure".
+      const chromeMajor = process.versions.chrome.split('.')[0];
+      const headerKeys = Object.keys(headers);
+      const findHint = (name: string): string | undefined =>
+        headerKeys.find((k) => k.toLowerCase() === name);
+      if (findHint('sec-ch-ua')) {
+        const brandHint = findHint('sec-ch-ua');
+        if (brandHint) {
+          headers[brandHint] =
+            `"Chromium";v="${chromeMajor}", "Google Chrome";v="${chromeMajor}", "Not-A.Brand";v="99"`;
+        }
+        const mobileHint = findHint('sec-ch-ua-mobile');
+        if (mobileHint) headers[mobileHint] = '?0';
+        const platformHint = findHint('sec-ch-ua-platform');
+        if (platformHint) headers[platformHint] = '"Linux"';
+        // High-entropy hints could contradict the claim — drop them
+        for (const hi of [
+          'sec-ch-ua-full-version-list',
+          'sec-ch-ua-full-version',
+          'sec-ch-ua-model',
+          'sec-ch-ua-platform-version',
+          'sec-ch-ua-wow64',
+          'sec-ch-ua-arch',
+          'sec-ch-ua-bitness',
+        ]) {
+          const key = findHint(hi);
+          if (key) delete headers[key];
+        }
+      }
+
       callback({ requestHeaders: headers });
     },
   );
