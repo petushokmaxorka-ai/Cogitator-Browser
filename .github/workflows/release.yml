@@ -80,7 +80,8 @@ jobs:
             dist/cogitator-linux/*
             dist/cogitator-windows/*
           generate_release_notes: true
-          prerelease: true
+          # betas ship as prereleases; stable tags become full releases
+          prerelease: ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'rc') }}
           fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

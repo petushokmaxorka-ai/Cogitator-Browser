@@ -5,7 +5,7 @@
 adblock, fingerprint spoofing). Born inside the HereticArch swarm; extracted
 as a standalone product.
 
-> Status: **2.2.0-beta.4 (public beta)** — feature-honest beta. The core browser is daily-driver
+> Status: **2.2.0 (stable)** — public release. The core browser is daily-driver
 > solid; the long tail of tools varies (see matrix). Auto-update is wired from
 > this version on.
 
