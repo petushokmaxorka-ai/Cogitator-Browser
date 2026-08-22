@@ -157,12 +157,12 @@ const MechanicusFolderIcon: React.FC<MechanicusFolderIconProps> = ({ open, accen
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        height: 38,
+        height: 19,
         color: open ? 'var(--omnissiah-red, #DC2626)' : accent,
         animation: open ? 'folder-cog-spin 2s linear infinite' : 'none',
       }}
     >
-      <Cog size={24} strokeWidth={1.2} />
+      <Cog size={13} strokeWidth={1.2} />
     </div>
   </div>
 );
@@ -191,19 +191,19 @@ const FolderSection: React.FC<FolderSectionProps> = ({
   const meta = FOLDER_META[folderId];
 
   return (
-    <section style={{ width: '100%', marginBottom: 6 }}>
+    <section style={{ width: '100%', marginBottom: 4 }}>
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: 6,
+          marginBottom: 4,
         }}
       >
         <span
           style={{
             color: meta.accent,
-            fontSize: 13,
+            fontSize: 9,
             textTransform: 'uppercase',
             letterSpacing: '0.12em',
           }}
@@ -219,17 +219,17 @@ const FolderSection: React.FC<FolderSectionProps> = ({
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 6,
-            padding: '5px 12px',
+            gap: 4,
+            padding: '3px 7px',
             background: 'transparent',
             border: '1px solid var(--cogitator-gold, #C8A84B)',
             color: 'var(--cogitator-gold, #C8A84B)',
             fontFamily: 'var(--font-mono)',
-            fontSize: 13,
+            fontSize: 9,
             cursor: 'pointer',
           }}
         >
-          <Plus size={14} />
+          <Plus size={9} />
           Add
         </button>
       </div>
@@ -242,8 +242,8 @@ const FolderSection: React.FC<FolderSectionProps> = ({
           width: '100%',
           display: 'flex',
           alignItems: 'center',
-          gap: 15,
-          padding: '12px 15px',
+          gap: 8,
+          padding: '6px 8px',
           background: 'rgba(10, 10, 10, 0.85)',
           cursor: 'pointer',
           textAlign: 'left',
@@ -253,14 +253,14 @@ const FolderSection: React.FC<FolderSectionProps> = ({
         <span
           style={{
             color: 'var(--sacred-white, #E8E8E8)',
-            fontSize: 16,
+            fontSize: 10,
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
           }}
         >
           {meta.label}
         </span>
-        <span style={{ marginLeft: 'auto', color: meta.accent, fontSize: 14, opacity: 0.7 }}>
+        <span style={{ marginLeft: 'auto', color: meta.accent, fontSize: 9, opacity: 0.7 }}>
           {open ? '▼' : '▶'}
         </span>
       </button>
@@ -269,10 +269,10 @@ const FolderSection: React.FC<FolderSectionProps> = ({
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: 12,
-            marginTop: 9,
-            paddingLeft: 3,
+            gridTemplateColumns: 'repeat(8, 1fr)',
+            gap: 6,
+            marginTop: 5,
+            paddingLeft: 2,
           }}
         >
           {links.map((link) => (

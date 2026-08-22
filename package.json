@@ -1,6 +1,6 @@
 {
   "name": "cogitator-browser",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "COGITATOR BROWSER — Dark Mechanicus AI Browser with local Ollama",
   "main": "./out/main/index.js",
   "author": "Heretic OS",
