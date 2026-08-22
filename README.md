@@ -30,11 +30,12 @@ AI features expect a local OpenAI-compatible endpoint (see matrix).
 ### Core browser — solid
 | Area | Status |
 |------|--------|
-| Tabs, sessions, PiP, downloads | ✓ daily-driver |
+| Tabs (WebContentsView), sessions, PiP, downloads | ✓ daily-driver |
 | AdBlocker (Cliqz engine) | ✓ |
 | Privacy: sandbox + contextIsolation, fingerprint spoofer | ✓ |
 | Vault (encrypted cards/passwords) | ✓ |
-| Reader mode | hidden (needs re-test) |
+| Reader mode | ✓ wired (BookOpen in the address bar) |
+| Real terminal | ✓ node-pty + xterm.js interactive shell |
 
 ### AI layer — requires local endpoints
 | Area | Status |
@@ -51,10 +52,10 @@ any OpenAI-compatible endpoint works.
 ### Tools — 60+ panels, varying depth
 | Tier | Tools |
 |------|-------|
-| Real CLI/socket backends | Git, Docker, SSH, SQLite, PortScanner, WakeOnLAN, Terminal, Archive, Network monitor |
-| Self-contained utilities | Calculator, calendar, regex, diff, JSON/API tester, QR, TOTP, color picker, notes, journal, OCR, TTS... |
-| BETA / demo grade | Torrent client, email client, music visualizer, RSS, habits, timetrack |
-| 7 dead IPC channels | per-site data settings, reader extract — scheduled for removal or revival |
+| Real CLI/socket/PTY backends | Terminal (node-pty), Git, Docker, SSH, SQLite, PortScanner, WakeOnLAN, Archive, Downloader (yt-dlp), Network monitor |
+| Real protocol backends | Torrent (WebTorrent), Email (IMAP/SMTP), RSS (main-process fetch, no third-party proxy) |
+| Self-contained utilities | Calculator, calendar, regex, diff, JSON/API tester, QR, TOTP, color picker, notes, journal, OCR (tesseract.js), TTS, recorder, music visualizer... |
+| BETA / demo grade | Process manager (real list + labeled demo preview), TODO, habits, timetrack (localStorage apps) |
 
 ## Architecture
 
