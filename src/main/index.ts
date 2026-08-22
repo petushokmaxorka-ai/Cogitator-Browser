@@ -344,12 +344,15 @@ app.whenReady().then(async () => {
   }
 
   // ═══ CORS fix for local SearXNG (Noosphere cogitator:// → localhost:8888) ═══
+  // + Forge (:9091) — lets the cogitator://forge wrapper probe service health.
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     const isSearx = details.url.startsWith('http://localhost:8888/') ||
                     details.url.startsWith('http://127.0.0.1:8888/') ||
                     details.url.startsWith('http://localhost:8080/') ||
                     details.url.startsWith('http://127.0.0.1:8080/');
-    if (isSearx && details.responseHeaders) {
+    const isForge = details.url.startsWith('http://localhost:9091/') ||
+                    details.url.startsWith('http://127.0.0.1:9091/');
+    if ((isSearx || isForge) && details.responseHeaders) {
       details.responseHeaders['Access-Control-Allow-Origin'] = ['*'];
       details.responseHeaders['Access-Control-Allow-Methods'] = ['GET, POST, OPTIONS'];
       details.responseHeaders['Access-Control-Allow-Headers'] = ['Content-Type, Accept'];
@@ -379,6 +382,13 @@ app.whenReady().then(async () => {
       const data = await readFile(join(__dirname, '../../resources/noosphere.html'));
       return new Response(data, {
         headers: { 'content-type': 'text/html', 'Access-Control-Allow-Origin': '*' },
+      });
+    } else if (url === 'cogitator://forge' || url.startsWith('cogitator://forge/')) {
+      // In-app Forge panel: embeds the :9091 web UI with a health-checked
+      // offline state (self-heals once heretic-forge starts).
+      const data = await readFile(join(__dirname, '../../resources/forge.html'));
+      return new Response(data, {
+        headers: { 'content-type': 'text/html; charset=utf-8' },
       });
     } else if (url.startsWith('cogitator://error')) {
       const parsed = new URL(url);

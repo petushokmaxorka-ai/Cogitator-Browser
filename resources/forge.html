@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>⚒ FORGE — Heretic Forge</title>
+  <style>
+    :root {
+      --void-black: #000000;
+      --iron-dark: #1E1E1E;
+      --iron-gray: #2A2A2A;
+      --steel-gray: #3A3A3A;
+      --omnissiah-red: #FF0000;
+      --omnissiah-red-dim: #8B0000;
+      --cogitator-gold: #C8A84B;
+      --parchment: #D4C5A0;
+      --parchment-dim: #8B7D6B;
+      --sacred-white: #E8E8E8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; background: var(--void-black); overflow: hidden; }
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      color: var(--parchment);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @keyframes pulse-red {
+      0%, 100% { opacity: 0.4; text-shadow: 0 0 6px rgba(255,0,0,0.2); }
+      50%      { opacity: 1;   text-shadow: 0 0 18px rgba(255,0,0,0.6); }
+    }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      text-align: center;
+      max-width: 640px;
+      padding: 32px;
+    }
+    .glyph { font-size: 44px; animation: pulse-red 1.6s ease-in-out infinite; }
+    .title {
+      font-size: 16px;
+      letter-spacing: 0.3em;
+      color: var(--cogitator-gold);
+      text-transform: uppercase;
+    }
+    .msg { font-size: 12px; color: var(--parchment-dim); line-height: 1.8; }
+    .msg code {
+      color: var(--sacred-white);
+      background: var(--iron-dark);
+      border: 1px solid var(--iron-gray);
+      padding: 2px 8px;
+      font-size: 11px;
+    }
+    .retry {
+      margin-top: 8px;
+      padding: 8px 24px;
+      background: var(--iron-dark);
+      border: 1px solid var(--omnissiah-red-dim);
+      color: var(--omnissiah-red);
+      font-family: inherit;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 200ms ease;
+    }
+    .retry:hover {
+      background: rgba(139, 0, 0, 0.25);
+      border-color: var(--omnissiah-red);
+      text-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+    }
+    .spinner {
+      width: 22px; height: 22px;
+      border: 2px solid var(--steel-gray);
+      border-top-color: var(--cogitator-gold);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    #forge-frame {
+      display: none;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: var(--void-black);
+    }
+  </style>
+</head>
+<body>
+  <div class="state" id="boot">
+    <div class="spinner"></div>
+    <div class="title">IGNITING THE FORGE</div>
+    <div class="msg">Communing with the Machine Spirit at 127.0.0.1:9091…</div>
+  </div>
+
+  <div class="state" id="offline" style="display:none">
+    <div class="glyph">⚒</div>
+    <div class="title" style="color: var(--omnissiah-red);">FORGE COLD</div>
+    <div class="msg">
+      The Heretic Forge service is not answering.<br>
+      Ignite it, then this panel will catch the flame itself:<br><br>
+      <code>systemctl --user start heretic-forge</code>
+    </div>
+    <button class="retry" id="btn-retry">◆ RE-IGNITE</button>
+  </div>
+
+  <iframe id="forge-frame" src="about:blank" title="Heretic Forge"></iframe>
+
+  <script>
+    (function () {
+      var FORGE_URL = 'http://127.0.0.1:9091/';
+      var boot = document.getElementById('boot');
+      var offline = document.getElementById('offline');
+      var frame = document.getElementById('forge-frame');
+      var retry = document.getElementById('btn-retry');
+      var timer = null;
+
+      function show(node) {
+        boot.style.display = 'none';
+        offline.style.display = 'none';
+        frame.style.display = 'none';
+        node.style.display = 'flex';
+      }
+
+      function probe() {
+        show(boot);
+        fetch(FORGE_URL, { signal: AbortSignal.timeout(4000) })
+          .then(function (res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            frame.src = FORGE_URL;
+            frame.style.display = 'block';
+            boot.style.display = 'none';
+            offline.style.display = 'none';
+            if (timer) { clearInterval(timer); timer = null; }
+          })
+          .catch(function () {
+            show(offline);
+            if (!timer) timer = setInterval(probeQuiet, 10000);
+          });
+      }
+
+      function probeQuiet() {
+        fetch(FORGE_URL, { signal: AbortSignal.timeout(4000) })
+          .then(function (res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            frame.src = FORGE_URL;
+            frame.style.display = 'block';
+            boot.style.display = 'none';
+            offline.style.display = 'none';
+            clearInterval(timer); timer = null;
+          })
+          .catch(function () { /* stay cold; next tick retries */ });
+      }
+
+      retry.addEventListener('click', probe);
+      probe();
+    })();
+  </script>
+</body>
+</html>

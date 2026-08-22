@@ -17,7 +17,7 @@ type FolderId = 'heretic' | 'webForge' | 'forge' | 'quick';
 
 // ── Constants ──────────────────────────────────────────────
 
-const STORAGE_HERETIC = 'cogitator_heretic_links_v2';
+const STORAGE_HERETIC = 'cogitator_heretic_links_v3';
 const STORAGE_WEB_FORGE = 'cogitator_web_forge_links_v1';
 const STORAGE_FORGE = 'cogitator_forge_links_v2';
 const STORAGE_QUICK = 'cogitator_quicklinks_v4';
@@ -30,7 +30,7 @@ const OPEN_KEYS: Record<FolderId, string> = {
 };
 
 const DEFAULT_HERETIC: QuickLink[] = [
-  { id: 'forge', title: 'Heretic Forge', url: 'http://127.0.0.1:9091', favicon: '⚒' },
+  { id: 'forge', title: 'Heretic Forge', url: 'cogitator://forge', favicon: '⚒' },
   { id: 'dashboard', title: 'Dashboard', url: 'http://127.0.0.1:7777', favicon: '' },
   { id: 'noosphere', title: 'Noosphere', url: 'cogitator://noosphere', favicon: '' },
   { id: 'mens', title: 'Mens Machinae', url: 'http://127.0.0.1:8000', favicon: '◆' },
