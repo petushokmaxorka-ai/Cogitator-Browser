@@ -54,8 +54,9 @@ any OpenAI-compatible endpoint works.
 |------|-------|
 | Real CLI/socket/PTY backends | Terminal (node-pty), Git, Docker, SSH, SQLite, PortScanner, WakeOnLAN, Archive, Downloader (yt-dlp), Network monitor |
 | Real protocol backends | Torrent (WebTorrent), Email (IMAP/SMTP), RSS (main-process fetch, no third-party proxy) |
-| Self-contained utilities | Calculator, calendar, regex, diff, JSON/API tester, QR, TOTP, color picker, notes, journal, OCR (tesseract.js), TTS, recorder, music visualizer... |
-| BETA / demo grade | Process manager (real list + labeled demo preview), TODO, habits, timetrack (localStorage apps) |
+| Self-contained utilities | Calculator, calendar, regex, diff, JSON/API tester, QR, TOTP, color picker, OCR (tesseract.js), TTS, recorder, music visualizer... |
+| File-backed tool store | Notes, journal, TODO, habits, timetrack — persisted in userData/toolstore (survive localStorage wipes; auto-migrated) |
+| Real process manager | 3 s live process list + kill (demo mode removed) |
 
 ## Architecture
 

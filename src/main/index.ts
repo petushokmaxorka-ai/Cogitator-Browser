@@ -5,6 +5,7 @@
 import { app, shell, BrowserWindow, ipcMain, session, protocol, dialog } from 'electron';
 import { join, resolve, isAbsolute, normalize, sep } from 'path';
 import { readdir, stat, unlink, rename, mkdir, readFile, writeFile } from 'fs/promises';
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { homedir } from 'os';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import { IPC_CHANNELS } from '../shared/types';
@@ -409,8 +410,7 @@ app.whenReady().then(async () => {
   registerTerminalHandlers();
 
   // ═══ RSS: main-process fetch (no CORS in main, no third-party proxy) ═══
-  ipcMain.handle(IPC_CHANNELS.RSS_FETCH_URL, async (_, url: string) => {
-    let parsed: URL;
+  ipcMain.handle(IPC_CHANNELS.RSS_FETCH_URL, async (_, url: string) => {    let parsed: URL;
     try {
       parsed = new URL(url);
     } catch {
@@ -432,6 +432,26 @@ app.whenReady().then(async () => {
     const text = await res.text();
     if (text.length > 10_000_000) throw new Error('Feed too large');
     return text;
+  });
+
+  // ═══ Tool store: file-backed persistence for tool panels ═══
+  const toolstoreFile = (key: string): string => {
+    const safe = key.replace(/[^a-zA-Z0-9_-]/g, '_');
+    if (!safe || safe.length > 100) throw new Error('Bad store key');
+    return join(app.getPath('userData'), 'toolstore', `${safe}.json`);
+  };
+  ipcMain.handle(IPC_CHANNELS.TOOLSTORE_GET, (_, key: string) => {
+    try {
+      const file = toolstoreFile(key);
+      return existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null;
+    } catch {
+      return null;
+    }
+  });
+  ipcMain.handle(IPC_CHANNELS.TOOLSTORE_SET, (_, key: string, value: unknown) => {
+    const file = toolstoreFile(key);
+    mkdirSync(join(app.getPath('userData'), 'toolstore'), { recursive: true });
+    writeFileSync(file, JSON.stringify(value ?? null));
   });
 
   // Session restore — proxy CLI is set before any navigation

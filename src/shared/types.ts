@@ -676,6 +676,10 @@ export const IPC_CHANNELS = {
   // ═══ RSS: main-process fetch (no CORS, no third-party proxy) ═══
   RSS_FETCH_URL: 'rss:fetch-url',
 
+  // ═══ Tool store: file-backed persistence for tool panels ═══
+  TOOLSTORE_GET: 'toolstore:get',
+  TOOLSTORE_SET: 'toolstore:set',
+
   // ═══ Real terminal (node-pty) ═════════════════════════════
   TERM_CREATE: 'term:create',
   TERM_WRITE: 'term:write',

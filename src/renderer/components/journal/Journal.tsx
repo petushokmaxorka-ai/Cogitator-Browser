@@ -4,7 +4,8 @@
 // Personal diary with AI mood analysis via Ollama
 // ═══════════════════════════════════════════════════════════
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { storeGet, storeSet } from '../../lib/toolstore';
 import { askAnathemetron } from '../../lib/anathemetron-chat';
 import {
   BookOpen,
@@ -63,7 +64,7 @@ function loadEntries(): JournalEntry[] {
 }
 
 function saveEntries(entries: JournalEntry[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  void storeSet(STORAGE_KEY, entries);
 }
 
 function getTodayStr(): string {
@@ -90,6 +91,25 @@ async function analyzeMoodOllama(entries: JournalEntry[]): Promise<string> {
 
 export default function Journal() {
   const [entries, setEntries] = useState<JournalEntry[]>(loadEntries);
+
+  const hydrated = useRef(false);
+
+  // Hydrate from the file-backed store (one-time localStorage migration)
+  useEffect(() => {
+    void (async () => {
+      const stored = await storeGet<JournalEntry[]>(STORAGE_KEY);
+      if (stored) {
+        setEntries(stored);
+      } else {
+        const local = loadEntries();
+        if (local.length) {
+          await storeSet(STORAGE_KEY, local);
+          localStorage.removeItem(STORAGE_KEY);
+        }
+      }
+      hydrated.current = true;
+    })();
+  }, []);
   const [showEditor, setShowEditor] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [aiState, setAiState] = useState<AIAnalysisState>('idle');
@@ -105,6 +125,7 @@ export default function Journal() {
 
   // Persist
   useEffect(() => {
+    if (!hydrated.current) return;
     saveEntries(entries);
   }, [entries]);
 

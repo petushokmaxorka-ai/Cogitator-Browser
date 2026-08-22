@@ -5,6 +5,7 @@
 // ═══════════════════════════════════════════════════════════
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { storeGet, storeSet } from '../../lib/toolstore';
 import {
   Play,
   Square,
@@ -54,7 +55,7 @@ function loadData(): TimeEntry[] {
 }
 
 function saveData(entries: TimeEntry[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  void storeSet(STORAGE_KEY, entries);
 }
 
 function formatDuration(totalSeconds: number): string {
@@ -122,6 +123,25 @@ type TrackerView = 'today' | 'week' | 'report';
 
 export default function TimeTracker() {
   const [entries, setEntries] = useState<TimeEntry[]>(loadData);
+
+  const hydrated = useRef(false);
+
+  // Hydrate from the file-backed store (one-time localStorage migration)
+  useEffect(() => {
+    void (async () => {
+      const stored = await storeGet<TimeEntry[]>(STORAGE_KEY);
+      if (stored) {
+        setEntries(stored);
+      } else {
+        const local = loadData();
+        if (local.length) {
+          await storeSet(STORAGE_KEY, local);
+          localStorage.removeItem(STORAGE_KEY);
+        }
+      }
+      hydrated.current = true;
+    })();
+  }, []);
   const [runningEntry, setRunningEntry] = useState<TimeEntry | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const [taskName, setTaskName] = useState('');
@@ -132,6 +152,7 @@ export default function TimeTracker() {
 
   // Persist
   useEffect(() => {
+    if (!hydrated.current) return;
     saveData(entries);
   }, [entries]);
 

@@ -19,19 +19,6 @@ interface ProcessInfo {
 type SortKey = 'name' | 'memory' | 'cpu' | 'pid' | 'type';
 type SortDir = 'asc' | 'desc';
 
-// ── Demo Data (offline preview — loaded on demand via DEMO button) ──
-
-const MOCK_PROCESSES: ProcessInfo[] = [
-  { pid: 1234, name: 'Cogitator Browser', type: 'browser', memory: 85, cpu: 2.5 },
-  { pid: 1235, name: 'GPU Process', type: 'gpu', memory: 64, cpu: 1.2 },
-  { pid: 1236, name: 'Tab: DuckDuckGo', type: 'tab', memory: 42, cpu: 0.8, url: 'https://duckduckgo.com' },
-  { pid: 1237, name: 'Tab: GitHub', type: 'tab', memory: 78, cpu: 1.5, url: 'https://github.com' },
-  { pid: 1238, name: 'AI Sidebar', type: 'renderer', memory: 56, cpu: 3.2 },
-  { pid: 1239, name: 'Utility: Network Service', type: 'utility', memory: 12, cpu: 0.1 },
-  { pid: 1240, name: 'AdBlocker', type: 'utility', memory: 8, cpu: 0.3 },
-  { pid: 1241, name: 'Noosphere Search', type: 'tab', memory: 23, cpu: 0.5, url: 'http://localhost:8888' },
-];
-
 // ── Helpers ─────────────────────────────────────────────────
 
 const getTypeColor = (type: ProcessInfo['type']): string => {
@@ -212,36 +199,6 @@ export function ProcessManager() {
         </div>
 
         <div style={{ display: 'flex', gap: '8px' }}>
-          {/* Demo data button (offline preview) */}
-          <button
-            onClick={() => setProcesses(MOCK_PROCESSES)}
-            title="Load demo process list for offline preview"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              padding: '4px 10px',
-              background: 'var(--iron-dark)',
-              border: '1px solid var(--iron-gray)',
-              color: 'var(--parchment-dim)',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '10px',
-              letterSpacing: '0.08em',
-              cursor: 'pointer',
-              transition: 'all 150ms ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--parchment-dim)';
-              e.currentTarget.style.color = 'var(--parchment)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--iron-gray)';
-              e.currentTarget.style.color = 'var(--parchment-dim)';
-            }}
-          >
-            <span>◆ DEMO</span>
-          </button>
-
           {/* Refresh button */}
           <button
             onClick={refreshProcesses}

@@ -138,7 +138,7 @@ const TAB_CONFIG: { id: SidebarTab; label: string }[] = [
   { id: 'speed', label: 'SPD' },
   { id: 'calendar', label: 'CAL' },
   { id: 'pomodoro', label: 'POMO' },
-  { id: 'todo', label: 'TODO [BETA]' },
+  { id: 'todo', label: 'TODO' },
   { id: 'tracker', label: 'TRK' },
   { id: 'habits', label: 'HAB' },
   { id: 'journal', label: 'JRN' },

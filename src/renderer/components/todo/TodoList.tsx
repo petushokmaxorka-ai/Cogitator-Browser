@@ -5,6 +5,7 @@
 // ═══════════════════════════════════════════════════════════
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { storeGet, storeSet } from '../../lib/toolstore';
 import { askAnathemetron } from '../../lib/anathemetron-chat';
 import {
   Plus,
@@ -62,7 +63,7 @@ function loadTodos(): Todo[] {
 }
 
 function saveTodos(todos: Todo[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+  void storeSet(STORAGE_KEY, todos);
 }
 
 async function queryOllama(tasks: Todo[]): Promise<string> {
@@ -74,6 +75,25 @@ async function queryOllama(tasks: Todo[]): Promise<string> {
 
 export default function TodoList() {
   const [todos, setTodos] = useState<Todo[]>(loadTodos);
+
+  const hydrated = useRef(false);
+
+  // Hydrate from the file-backed store (one-time localStorage migration)
+  useEffect(() => {
+    void (async () => {
+      const stored = await storeGet<Todo[]>(STORAGE_KEY);
+      if (stored) {
+        setTodos(stored);
+      } else {
+        const local = loadTodos();
+        if (local.length) {
+          await storeSet(STORAGE_KEY, local);
+          localStorage.removeItem(STORAGE_KEY);
+        }
+      }
+      hydrated.current = true;
+    })();
+  }, []);
   const [filter, setFilter] = useState<TodoFilter>('all');
   const [showAdd, setShowAdd] = useState(false);
   const [aiState, setAiState] = useState<AIPriorityState>('idle');
@@ -89,6 +109,7 @@ export default function TodoList() {
 
   // Persist
   useEffect(() => {
+    if (!hydrated.current) return;
     saveTodos(todos);
   }, [todos]);
 

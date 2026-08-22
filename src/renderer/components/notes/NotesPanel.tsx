@@ -3,6 +3,7 @@
 // Pray to the Omnissiah before each note.
 
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { storeGet, storeSet } from '../../lib/toolstore';
 import { askAnathemetron } from '../../lib/anathemetron-chat';
 import {
   Plus,
@@ -112,7 +113,7 @@ function loadNotes(): Note[] {
 }
 
 function saveNotes(notes: Note[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+  void storeSet(STORAGE_KEY, notes);
 }
 
 function generateId(): string {
@@ -124,6 +125,25 @@ function generateId(): string {
 export default function NotesPanel() {
   // ── State
   const [notes, setNotes] = useState<Note[]>(loadNotes);
+
+  const hydrated = useRef(false);
+
+  // Hydrate from the file-backed store (one-time localStorage migration)
+  useEffect(() => {
+    void (async () => {
+      const stored = await storeGet<Note[]>(STORAGE_KEY);
+      if (stored) {
+        setNotes(stored);
+      } else {
+        const local = loadNotes();
+        if (local.length) {
+          await storeSet(STORAGE_KEY, local);
+          localStorage.removeItem(STORAGE_KEY);
+        }
+      }
+      hydrated.current = true;
+    })();
+  }, []);
   const [activeNoteId, setActiveNoteId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('split');
@@ -139,6 +159,7 @@ export default function NotesPanel() {
 
   // ── Persist on change
   useEffect(() => {
+    if (!hydrated.current) return;
     saveNotes(notes);
   }, [notes]);
 

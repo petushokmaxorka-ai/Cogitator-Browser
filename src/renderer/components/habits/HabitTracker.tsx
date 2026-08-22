@@ -4,7 +4,8 @@
 // Heatmap-style habit tracking with streaks
 // ═══════════════════════════════════════════════════════════
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { storeGet, storeSet } from '../../lib/toolstore';
 import {
   Plus,
   Trash2,
@@ -55,7 +56,7 @@ function loadHabits(): Habit[] {
 }
 
 function saveHabits(habits: Habit[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(habits));
+  void storeSet(STORAGE_KEY, habits);
 }
 
 function getTodayStr(): string {
@@ -99,6 +100,25 @@ function computeCompletionRate(habit: Habit, days: number): number {
 
 export default function HabitTracker() {
   const [habits, setHabits] = useState<Habit[]>(loadHabits);
+
+  const hydrated = useRef(false);
+
+  // Hydrate from the file-backed store (one-time localStorage migration)
+  useEffect(() => {
+    void (async () => {
+      const stored = await storeGet<Habit[]>(STORAGE_KEY);
+      if (stored) {
+        setHabits(stored);
+      } else {
+        const local = loadHabits();
+        if (local.length) {
+          await storeSet(STORAGE_KEY, local);
+          localStorage.removeItem(STORAGE_KEY);
+        }
+      }
+      hydrated.current = true;
+    })();
+  }, []);
   const [showAdd, setShowAdd] = useState(false);
   const [selectedHabit, setSelectedHabit] = useState<string | null>(null);
 
@@ -109,6 +129,7 @@ export default function HabitTracker() {
 
   // Persist
   useEffect(() => {
+    if (!hydrated.current) return;
     saveHabits(habits);
   }, [habits]);
 

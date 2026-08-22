@@ -460,6 +460,12 @@ const electronAPI = {
     fetch: (url: string) => ipcRenderer.invoke(IPC_CHANNELS.RSS_FETCH_URL, url),
   },
 
+  // ── Tool store: file-backed persistence for tool panels ──
+  store: {
+    get: (key: string) => ipcRenderer.invoke(IPC_CHANNELS.TOOLSTORE_GET, key),
+    set: (key: string, value: unknown) => ipcRenderer.invoke(IPC_CHANNELS.TOOLSTORE_SET, key, value),
+  },
+
   // ── Real terminal (node-pty) ──────────────────────────
   terminal: {
     create: (opts?: { cols?: number; rows?: number }) =>
