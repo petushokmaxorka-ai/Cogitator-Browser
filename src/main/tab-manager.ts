@@ -257,24 +257,10 @@ export class TabManager {
       return { action: 'deny' };
     });
 
-    // Fallback accents when preload/CSS is blocked (minimal — does not override inputs)
-    const FALLBACK_CSS = `
-      a, a:visited { color: #C8A84B !important; }
-      a:hover { color: #FF0000 !important; }
-      ::selection { background: rgba(200,168,75,0.25) !important; color: #E8E8E8 !important; }
-      ::-webkit-scrollbar { width: 8px !important; height: 8px !important; }
-      ::-webkit-scrollbar-track { background: #000000 !important; }
-      ::-webkit-scrollbar-thumb { background: #3A3A3A !important; border-radius: 4px !important; }
-      ::-webkit-scrollbar-thumb:hover { background: #C8A84B !important; }
-      pre, code, kbd { font-family: 'Courier New', Courier, monospace !important; }
-    `;
-    on('dom-ready', () => {
-      try {
-        view.webContents.insertCSS(FALLBACK_CSS);
-      } catch (err) {
-        console.warn('[TabManager] insertCSS fallback failed:', err);
-      }
-    });
+    // NOTE: no style injection here. The old FALLBACK_CSS (gold links,
+    // scrollbars, monospace) re-skinned every external site from the main
+    // process and survived the preload cleanups — removed per Principal's
+    // call: external sites render pure Chromium.
 
     on('did-finish-load', () => {
       console.log(`[Tab] Loaded: ${view.webContents.getURL()}`);
