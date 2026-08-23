@@ -326,6 +326,8 @@ export class PiPManager {
         sandbox: true,
         contextIsolation: true,
         nodeIntegration: false,
+        // PiP must keep full frame-rate even when occluded (players)
+        backgroundThrottling: false,
       },
     });
 

@@ -33,6 +33,11 @@ const STYLE_BLACKLIST = [
   'protonmail.com',
   'localhost',
   '127.0.0.1',
+  // DarkReader is a CPU hog on heavy/realtime DOMs — these crawl without it
+  'twitch.tv',
+  'hltv.org',
+  'netflix.com',
+  'discord.com',
 ];
 
 // ── Custom Dark Mechanicus CSS (injected on ALL sites) ──
