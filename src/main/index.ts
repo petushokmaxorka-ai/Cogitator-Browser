@@ -97,6 +97,22 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 // ═══════════════════════════════════════════════════════════
+// CDP: Organism Control Channel (browser oracle / corpus limbs)
+// Binds Chromium DevTools Protocol to 127.0.0.1:9222 so the
+// Anathemetron consciousness (llama-swap swarm) can see tabs,
+// navigate, type, and read pages as a last-resort oracle and as
+// eyes. Localhost-only per AGENTS.md §3.1. Kill-switch env:
+// COGITATOR_DISABLE_CDP=1
+// ═══════════════════════════════════════════════════════════
+if (process.env.COGITATOR_DISABLE_CDP !== '1') {
+  app.commandLine.appendSwitch('remote-debugging-port', '9222');
+  app.commandLine.appendSwitch('remote-debugging-address', '127.0.0.1');
+  // Chromium 111+ rejects WS clients that send an Origin header (403).
+  // Port is localhost-only, so allowing all origins is safe here.
+  app.commandLine.appendSwitch('remote-allow-origins', '*');
+}
+
+// ═══════════════════════════════════════════════════════════
 // Privacy-Critical: Chromium Command-Line Switches
 // MUST be set BEFORE app.whenReady() fires.
 // ═══════════════════════════════════════════════════════════
@@ -1434,6 +1450,13 @@ app.on('web-contents-created', (_, contents) => {
     // Main renderer only — tab BrowserViews handle their own navigation
     if (mainWindow && contents === mainWindow.webContents) {
       shell.openExternal(url);
+      return { action: 'deny' };
+    }
+    // In-page popups (target=_blank, window.open) open as real tabs:
+    // normal browser UX, and the organism's CDP tab-creation path
+    // (Electron rejects DevTools /json/new — window.open is the bridge).
+    if (/^https?:/i.test(url)) {
+      tabManager.createTab(url);
     }
     return { action: 'deny' };
   });

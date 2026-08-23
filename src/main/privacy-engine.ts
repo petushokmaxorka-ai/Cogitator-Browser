@@ -400,6 +400,24 @@ export function configurePrivacySession(sess?: Session): void {
         }
       }
 
+      // ── Google sign-in, layer 2: full Windows-Chrome identity for google hosts.
+      // Google's anti-abuse heuristics flag "Linux + Chrome" combos from
+      // non-Google binaries; a consistent Windows-Chrome claim passes.
+      let isGoogleHost = false;
+      try {
+        const host = new URL(details.url).hostname.toLowerCase();
+        isGoogleHost = host === 'google.com' || host.endsWith('.google.com');
+      } catch {
+        /* non-URL detail */
+      }
+      if (isGoogleHost) {
+        const winUa = `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeMajor}.0.0.0 Safari/537.36`;
+        const uaKey = findHint('user-agent');
+        if (uaKey) headers[uaKey] = winUa;
+        const platKey = findHint('sec-ch-ua-platform');
+        if (platKey) headers[platKey] = '"Windows"';
+      }
+
       callback({ requestHeaders: headers });
     },
   );
