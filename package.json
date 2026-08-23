@@ -1,6 +1,6 @@
 {
   "name": "cogitator-browser",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "COGITATOR BROWSER — Dark Mechanicus AI Browser with local Ollama",
   "main": "./out/main/index.js",
   "author": "Heretic OS",
@@ -30,7 +30,6 @@
     "@types/nodemailer": "^8.0.0",
     "@xterm/addon-fit": "^0.11.0",
     "@xterm/xterm": "^6.0.0",
-    "darkreader": "^4.9.125",
     "electron-updater": "^6.1.7",
     "gifshot": "^0.4.5",
     "imap": "^0.8.19",
