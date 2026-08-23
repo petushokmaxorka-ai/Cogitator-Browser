@@ -19,6 +19,7 @@ import {
   TIMEZONE_SPOOF,
   PLUGIN_SPOOF,
 } from './fingerprint-spoofer';
+import { isGoogleLoginUrl, openGoogleLogin } from './google-login';
 import {
   buildLoadErrorUrl,
   sanitizeNavigationUrl,
@@ -462,6 +463,24 @@ export class TabManager {
     });
 
     on('did-navigate', (_, navUrl) => {
+      // Google sign-in never runs in a tab: the clean-room window takes it
+      // (vanilla partition + cookie sync back into the main session).
+      if (isGoogleLoginUrl(navUrl)) {
+        openGoogleLogin(navUrl);
+        view.webContents
+          .loadURL(
+            'data:text/html;charset=utf-8,' +
+              encodeURIComponent(
+                '<html><body style="background:#000;color:#C8A84B;font-family:monospace;' +
+                  'display:flex;align-items:center;justify-content:center;height:100vh;' +
+                  'margin:0"><div style="text-align:center;font-size:14px;letter-spacing:0.1em">' +
+                  '◆ GOOGLE SIGN-IN OPENED IN A CLEAN WINDOW<br><br>' +
+                  '<span style="color:#8B7D6B;font-size:11px">finish there, then reload this page' +
+                  ' — cookies sync automatically</span></div></body></html>',
+              ),
+          )
+          .catch(() => {});
+      }
       if (!navUrl.startsWith('cogitator://error')) {
         tab.url = navUrl;
       }
