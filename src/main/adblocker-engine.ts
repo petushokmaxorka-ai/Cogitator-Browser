@@ -134,7 +134,7 @@ function parseOptions(optionsStr: string): RuleOptions {
 
     // Handle negated options (~third-party)
     if (trimmed.startsWith('~')) {
-      const key = trimmed.slice(1) as keyof RuleOptions;
+      const key = trimmed.slice(1);
       if (key === 'third-party') options.thirdParty = false;
       continue;
     }

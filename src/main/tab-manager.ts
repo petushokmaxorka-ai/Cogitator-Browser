@@ -253,7 +253,7 @@ export class TabManager {
         if (!this.tabs.has(tab.id) || !isViewLive(view)) return;
         handler(...args);
       };
-      view.webContents.on(event, wrapped);
+      (view.webContents as NodeJS.EventEmitter).on(event, wrapped);
       entry.listeners.push({ event, handler: wrapped });
     };
 
@@ -561,7 +561,7 @@ export class TabManager {
     for (const { event, handler } of entry.listeners) {
       try {
         if (!entry.view.webContents.isDestroyed()) {
-          entry.view.webContents.removeListener(event, handler);
+          (entry.view.webContents as NodeJS.EventEmitter).removeListener(event, handler);
         }
       } catch {
         /* view already gone */

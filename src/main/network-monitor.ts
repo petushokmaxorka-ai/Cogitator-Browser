@@ -50,7 +50,7 @@ export interface RequestActivity {
 
 const MAX_ENTRIES = 500;
 const activityBuffer: RequestActivity[] = [];
-const startTimes = new Map<string, number>();
+const startTimes = new Map<number, number>();
 
 let activityCounter = 0;
 let installed = false;

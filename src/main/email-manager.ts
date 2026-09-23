@@ -193,7 +193,7 @@ export class EmailManager {
         const folders: EmailFolder[] = [];
         const walk = (obj: any, prefix = '') => {
           for (const [name, box] of Object.entries(obj)) {
-            const path = prefix ? `${prefix}${box.delimiter || '/'}${name}` : name;
+            const path = prefix ? `${prefix}${(box as any).delimiter || '/'}${name}` : name;
             folders.push({
               path,
               name,
@@ -261,7 +261,10 @@ export class EmailManager {
                   name: parsed.from?.value[0]?.name || '',
                   address: parsed.from?.value[0]?.address || '',
                 },
-                to: (parsed.to?.value || []).map((t: any) => ({
+                to: (Array.isArray(parsed.to)
+                  ? parsed.to.flatMap((a) => a.value)
+                  : parsed.to?.value || []
+                ).map((t: any) => ({
                   name: t.name || '',
                   address: t.address || '',
                 })),

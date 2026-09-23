@@ -4,7 +4,7 @@
 // isolation management.
 // ═══════════════════════════════════════════════════════════
 
-import { session, type Session } from 'electron';
+import { session, type Session, type ClearStorageDataOptions } from 'electron';
 import { writeFile, readFile } from 'fs/promises';
 import { join } from 'path';
 import { app } from 'electron';
@@ -110,13 +110,13 @@ export class SessionManager {
 
   private async clearBasedOnConfig(): Promise<void> {
     const s = session.defaultSession;
-    const storages: string[] = [];
+    const storages: StorageType[] = [];
 
     if (this.config.cookies) {
       await s.clearStorageData({ storages: ['cookies'] });
     }
     if (this.config.storage) {
-      storages.push('localstorage', 'indexdb', 'websql');
+      storages.push('localstorage', 'indexdb');
     }
     if (this.config.serviceWorkers) {
       storages.push('serviceworkers', 'cachestorage');
@@ -124,7 +124,7 @@ export class SessionManager {
 
     if (storages.length > 0) {
       await s.clearStorageData({
-        storages: storages as StorageType[],
+        storages,
       });
     }
 
@@ -134,7 +134,7 @@ export class SessionManager {
     }
 
     if (this.config.history) {
-      await s.clearHistory?.();
+      await (s as SessionWithHistory).clearHistory?.();
     }
 
     // Downloads list: clear auth cache as proxy
@@ -161,13 +161,11 @@ export class SessionManager {
 
     await s.clearStorageData({
       storages: [
-        'appcache',
         'cookies',
         'filesystem',
         'indexdb',
         'localstorage',
         'shadercache',
-        'websql',
         'serviceworkers',
         'cachestorage',
       ] as StorageType[],
@@ -179,7 +177,7 @@ export class SessionManager {
 
     // Clear history if API is available
     try {
-      await s.clearHistory?.();
+      await (s as SessionWithHistory).clearHistory?.();
     } catch {
       // clearHistory may not be available in all Electron versions
     }
@@ -203,7 +201,7 @@ export class SessionManager {
   async clearStorage(targetSession?: Session): Promise<void> {
     const s = targetSession || session.defaultSession;
     await s.clearStorageData({
-      storages: ['localstorage', 'indexdb', 'websql'] as StorageType[],
+      storages: ['localstorage', 'indexdb'] as StorageType[],
     });
   }
 
@@ -217,7 +215,7 @@ export class SessionManager {
   async clearHistory(targetSession?: Session): Promise<void> {
     const s = targetSession || session.defaultSession;
     try {
-      await s.clearHistory?.();
+      await (s as SessionWithHistory).clearHistory?.();
     } catch {
       console.warn('[SessionManager] clearHistory not available in this Electron version');
     }
@@ -243,19 +241,15 @@ export class SessionManager {
 }
 
 // ═══════════════════════════════════════════════════════════
-// Storage type helper (Electron's StorageType union)
+// Storage type helper (Electron's StorageType union; Chromium dropped
+// 'appcache' and 'websql', which Electron silently ignored)
 // ═══════════════════════════════════════════════════════════
 
-type StorageType =
-  | 'appcache'
-  | 'cookies'
-  | 'filesystem'
-  | 'indexdb'
-  | 'localstorage'
-  | 'shadercache'
-  | 'websql'
-  | 'serviceworkers'
-  | 'cachestorage';
+type StorageType = NonNullable<ClearStorageDataOptions['storages']>[number];
+
+// Session#clearHistory is not part of Electron's API; kept as an optional
+// probe in case a future version adds it.
+type SessionWithHistory = Session & { clearHistory?: () => Promise<void> };
 
 // ═══════════════════════════════════════════════════════════
 // Singleton export
