@@ -74,6 +74,12 @@ any OpenAI-compatible endpoint works.
 > process drive the browser. Launch with `COGITATOR_DISABLE_CDP=1` to turn
 > it off.
 
+> Proxy: by default (`COGITATOR_PROXY_MODE=auto`) the browser uses a local
+> Clash/Happ-style proxy on `127.0.0.1` (ports 7890 / 7891 / 10808 / 10809 /
+> 1080) when one is listening and otherwise connects directly, ignoring the
+> OS proxy settings. Set `COGITATOR_PROXY_MODE=system` to follow the OS
+> proxy, or `COGITATOR_PROXY=<Chromium proxy rules>` for an explicit one.
+
 ### Tools — 60+ panels, varying depth
 | Tier | Tools |
 |------|-------|
