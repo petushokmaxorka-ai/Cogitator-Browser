@@ -6,7 +6,7 @@ INSTALL_DIR="${HOME}/.local/share/FlClashX"
 BIN_LINK="${HOME}/.local/bin/ficlashx"
 APPS_DIR="${HOME}/.local/share/applications"
 DESKTOP_DST="${APPS_DIR}/ficlashx.desktop"
-SUB_URL="${PROMETHEUS_SUB_URL:-https://waynode.prometheus.cx/sub/3HgTWEGcw9-hXXYB}"
+SUB_URL="${PROMETHEUS_SUB_URL:-}"  # personal subscription link: pass via env, never commit it
 APP_IMAGE_URL="https://github.com/pluralplay/FlClashX/releases/latest/download/FlClashX-linux-amd64.AppImage"
 APP_IMAGE="${INSTALL_DIR}/FlClashX.AppImage"
 MANUAL_CANDIDATES=(
@@ -72,7 +72,7 @@ FlClashX installed.
   Menu   : FlClashX (Prometheus VPN)
 
 Subscription URL (add in app → Profiles → +):
-  ${SUB_URL}
+  ${SUB_URL:-(set PROMETHEUS_SUB_URL, or copy the link from your provider panel)}
 
 After Connect, SOCKS should listen on 127.0.0.1:7891
 Check: bash /home/heretic/heretic-os/cogitator-browser/resources/happ-check.sh
