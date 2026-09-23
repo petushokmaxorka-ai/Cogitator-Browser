@@ -1,6 +1,13 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { resolve, normalize, isAbsolute, sep } from 'path';
 import { homedir } from 'os';
+
+// Pin the home dir: with the real one the escape cases depend on who runs
+// the suite (as root, HOME=/root makes /root/.ssh an "allowed" path).
+vi.mock('os', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('os')>();
+  return { ...actual, homedir: () => '/home/cogitator-test' };
+});
 
 // Replicate resolveSafePath logic from index.ts
 const ALLOWED_ROOTS = [
