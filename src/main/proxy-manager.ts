@@ -3,7 +3,8 @@
 // direct: TUN-only, no browser proxy. system/pac: opt-in.
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { createConnection, request as httpRequest } from 'http';
+import { request as httpRequest } from 'http';
+import { createConnection } from 'net';
 import { homedir } from 'os';
 import { join } from 'path';
 import type { Session } from 'electron';
