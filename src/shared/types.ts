@@ -31,6 +31,8 @@ export interface ChatMessage {
 export interface VPNStatus {
   connected: boolean;
   ip?: string;
+  proxyRules?: string;
+  proxySource?: string;
 }
 
 export interface OllamaModel {

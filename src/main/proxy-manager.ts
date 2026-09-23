@@ -233,17 +233,17 @@ async function applyPacIfPresent(sess: Session): Promise<boolean> {
   return true;
 }
 
-async function pickProxyRules(): Promise<{ rules: string; label: string } | null> {
+async function pickProxyRules(): Promise<{ rules: string; label: string; ports: number[] } | null> {
   const envProxy = process.env.COGITATOR_PROXY?.trim();
   if (envProxy) {
-    return { rules: envProxy, label: 'env' };
+    return { rules: envProxy, label: 'env', ports: [] };
   }
 
   for (const c of CANDIDATES) {
     if (c.label === 'env') continue;
     if (!(await rulesReachable(c))) continue;
     if (!(await egressAlive(c))) continue;
-    return { rules: c.rules, label: c.label };
+    return { rules: c.rules, label: c.label, ports: c.ports };
   }
   return null;
 }
