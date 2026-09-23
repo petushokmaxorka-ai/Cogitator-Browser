@@ -63,6 +63,7 @@ export class TabManager {
   private activeTabId: string | null = null;
   private window: BrowserWindow | null = null;
   private sidebarOpen = false;
+  private sidebarWidth = SIDEBAR_WIDTH;
   private htmlFullscreenTabId: string | null = null;
 
   // ── Window Binding ──────────────────────────────────────
@@ -166,13 +167,19 @@ export class TabManager {
     this.updateBounds();
   }
 
+  setSidebarWidth(width: number): void {
+    if (!Number.isFinite(width) || width < 0) return;
+    this.sidebarWidth = Math.round(width);
+    this.updateBounds();
+  }
+
   private attachView(entry: TabEntry): void {
     const win = this.window;
     if (!isWindowLive(win) || !isViewLive(entry.view)) return;
 
     try {
       const bounds = win.getContentBounds();
-      const sidebarOffset = this.sidebarOpen ? SIDEBAR_WIDTH : 0;
+      const sidebarOffset = this.sidebarOpen ? this.sidebarWidth : 0;
 
       if (entry.tab.url.includes('cogitator://start')) {
         safeRemoveBrowserView(win, entry.view);
