@@ -3,7 +3,8 @@
 // direct: TUN-only, no browser proxy. system/pac: opt-in.
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { createConnection, request as httpRequest } from 'http';
+import { request as httpRequest } from 'http';
+import { createConnection } from 'net';
 import { homedir } from 'os';
 import { join } from 'path';
 import type { Session } from 'electron';
@@ -92,12 +93,23 @@ function portOpen(host: string, port: number, timeoutMs = 600): Promise<boolean>
   });
 }
 
-async function rulesReachable(candidate: { rules: string; ports: number[] }): Promise<boolean> {
-  if (candidate.ports.length === 0) return false;
-  for (const port of candidate.ports) {
-    if (await portOpen('127.0.0.1', port)) return true;
-  }
-  return false;
+/** Probe every candidate port once, concurrently. This runs on the startup
+ *  path before the main window opens, and on Windows a refused loopback
+ *  connect only ends via the timeout (SYN retries), so sequential probes of
+ *  the 7 candidate ports would add seconds to every launch. */
+async function probeCandidatePorts(): Promise<Set<number>> {
+  const ports = [...new Set(CANDIDATES.flatMap((c) => c.ports))];
+  const open = new Set<number>();
+  await Promise.all(
+    ports.map(async (port) => {
+      if (await portOpen('127.0.0.1', port)) open.add(port);
+    }),
+  );
+  return open;
+}
+
+function rulesReachable(candidate: { ports: number[] }, openPorts: Set<number>): boolean {
+  return candidate.ports.some((port) => openPorts.has(port));
 }
 
 /** A listening port is not a working tunnel: a dead xray/clash egress kills
@@ -150,21 +162,23 @@ function isGlobalPac(content: string): boolean {
   return /PROXY|SOCKS/i.test(trimmed);
 }
 
-/** Chromium PAC supports PROXY / SOCKS / DIRECT — not SOCKS5. */
-function buildProxyChain(picked: { rules: string; ports: number[] } | null): string {
+/** Chromium PAC supports PROXY / SOCKS / DIRECT — not SOCKS5. Each proxyRules
+ *  entry maps by its own scheme, so a socks-only port is never tried as an
+ *  HTTP proxy and COGITATOR_PROXY rules carry over into PAC mode. */
+export function buildProxyChain(picked: { rules: string } | null): string {
   if (!picked) return 'DIRECT';
-  if (picked.rules.includes('http=')) {
-    const httpMatch = picked.rules.match(/http=127\.0\.0\.1:(\d+)/);
-    const socksMatch = picked.rules.match(/socks5:\/\/127\.0\.0\.1:(\d+)/i);
-    const parts: string[] = [];
-    if (httpMatch) parts.push(`PROXY 127.0.0.1:${httpMatch[1]}`);
-    if (socksMatch) parts.push(`SOCKS 127.0.0.1:${socksMatch[1]}`);
-    parts.push('DIRECT');
-    return parts.join('; ');
+  const parts: string[] = [];
+  for (const raw of picked.rules.split(';')) {
+    // "http=host:port" → the proxy after the url-scheme selector
+    const entry = raw.trim().replace(/^[a-z]+=/i, '');
+    const m = entry.match(/^(?:([a-z0-9]+):\/\/)?([^\s/]+)$/i);
+    if (!m) continue;
+    const kind = (m[1] ?? 'http').toLowerCase().startsWith('socks') ? 'SOCKS' : 'PROXY';
+    const directive = `${kind} ${m[2]}`;
+    if (!parts.includes(directive)) parts.push(directive);
   }
-  const port = picked.ports[0];
-  if (!port) return 'DIRECT';
-  return `PROXY 127.0.0.1:${port}; SOCKS 127.0.0.1:${port}; DIRECT`;
+  parts.push('DIRECT');
+  return parts.join('; ');
 }
 
 async function buildSelectivePac(): Promise<string> {
@@ -238,9 +252,10 @@ async function pickProxyRules(): Promise<{ rules: string; label: string } | null
     return { rules: envProxy, label: 'env' };
   }
 
+  const openPorts = await probeCandidatePorts();
   for (const c of CANDIDATES) {
     if (c.label === 'env') continue;
-    if (!(await rulesReachable(c))) continue;
+    if (!rulesReachable(c, openPorts)) continue;
     if (!(await egressAlive(c))) continue;
     return { rules: c.rules, label: c.label };
   }

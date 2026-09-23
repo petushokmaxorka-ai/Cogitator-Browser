@@ -2,7 +2,9 @@
 # COGITATOR BROWSER — canonical launcher (Electron v2.0, repo root)
 set -euo pipefail
 
-ROOT="/home/heretic/heretic-os/cogitator-browser"
+# Repo root = parent of this script's real location (install-desktop.sh
+# symlinks it into ~/.local/bin, so resolve links first).
+ROOT="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
 cd "${ROOT}"
 
 needs_build() {
@@ -22,11 +24,11 @@ if [[ -f out/main/index.js ]] && ! grep -q 'safeRemoveBrowserView' out/main/inde
 fi
 
 # Close every stale Cogitator Electron (multiple zombies break which build you see).
-if pgrep -f "cogitator-browser/node_modules/.bin/electron" >/dev/null 2>&1 \
-   || pgrep -f "cogitator-browser/node_modules/electron/dist/electron" >/dev/null 2>&1; then
+if pgrep -f "${ROOT}/node_modules/.bin/electron" >/dev/null 2>&1 \
+   || pgrep -f "${ROOT}/node_modules/electron/dist/electron" >/dev/null 2>&1; then
   echo "Cogitator: closing previous window(s)…" >&2
-  pkill -f "cogitator-browser/node_modules/.bin/electron" 2>/dev/null || true
-  pkill -f "cogitator-browser/node_modules/electron/dist/electron" 2>/dev/null || true
+  pkill -f "${ROOT}/node_modules/.bin/electron" 2>/dev/null || true
+  pkill -f "${ROOT}/node_modules/electron/dist/electron" 2>/dev/null || true
   sleep 1
 fi
 

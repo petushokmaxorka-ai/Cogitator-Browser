@@ -50,7 +50,7 @@ export interface RequestActivity {
 
 const MAX_ENTRIES = 500;
 const activityBuffer: RequestActivity[] = [];
-const startTimes = new Map<string, number>();
+const startTimes = new Map<number, number>();
 
 let activityCounter = 0;
 let installed = false;
@@ -100,10 +100,12 @@ export function installNetworkMonitor(): void {
   if (!sess) return;
 
   try {
-    sess.webRequest.onBeforeRequest(({ id, webContents }) => {
+    sess.webRequest.onBeforeRequest(({ id, webContents }, callback) => {
       // Record start timestamp keyed by request id (per webContents).
       void webContents;
       if (!startTimes.has(id)) startTimes.set(id, Date.now());
+      // Blocking listener: the request stalls until the callback runs.
+      callback({});
     });
 
     sess.webRequest.onCompleted(({ id, url, method, statusCode, statusLine, resourceType, fromCache }) => {

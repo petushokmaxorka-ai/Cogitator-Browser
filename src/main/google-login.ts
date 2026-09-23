@@ -43,7 +43,7 @@ export async function syncGoogleCookies(): Promise<void> {
   for (const probe of probes) {
     let jar;
     try {
-      jar = await part.cookies.filter({ url: probe });
+      jar = await part.cookies.get({ url: probe });
     } catch {
       continue;
     }
@@ -56,7 +56,9 @@ export async function syncGoogleCookies(): Promise<void> {
           url: `https://${c.domain.replace(/^\./, '')}${c.path}`,
           name: c.name,
           value: c.value,
-          domain: c.domain,
+          // Host-only cookies (incl. __Host- prefixed) must not carry a
+          // Domain attribute, or Chromium rejects/widens them.
+          domain: c.hostOnly ? undefined : c.domain,
           path: c.path,
           secure: c.secure,
           httpOnly: c.httpOnly,

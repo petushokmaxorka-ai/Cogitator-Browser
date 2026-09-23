@@ -4,7 +4,7 @@
 // Level: Brave/LibreWolf equivalent.
 // ═══════════════════════════════════════════════════════════
 
-import { session, type Session, type OnHeadersReceivedListenerDetails, type OnBeforeRequestListenerDetails, type BeforeSendResponse, type HeadersReceivedResponse } from 'electron';
+import { session, type Session, type OnHeadersReceivedListenerDetails, type OnBeforeRequestListenerDetails, type CallbackResponse, type HeadersReceivedResponse } from 'electron';
 
 // ── Tracking parameter blacklist ──────────────────────────
 const TRACKING_PARAMS: readonly string[] = [
@@ -213,7 +213,7 @@ export function configurePrivacySession(sess?: Session): void {
   s.webRequest.onHeadersReceived(
     filterAllUrls(),
     (details: OnHeadersReceivedListenerDetails, callback: (response: HeadersReceivedResponse) => void) => {
-      const headers: Record<string, string[]> = { ...details.responseHeaders } || {};
+      const headers: Record<string, string[]> = { ...details.responseHeaders };
 
       // ═══ Remove fingerprinting / tracking headers ═══
       const headersToStrip: readonly string[] = [
@@ -304,7 +304,7 @@ export function configurePrivacySession(sess?: Session): void {
   // ── 1.1.4 Request blocking & tracking parameter stripping ──
   s.webRequest.onBeforeRequest(
     filterAllUrls(),
-    (details: OnBeforeRequestListenerDetails, callback: (response: BeforeSendResponse) => void) => {
+    (details: OnBeforeRequestListenerDetails, callback: (response: CallbackResponse) => void) => {
       const url = details.url;
 
       // ═══ Block known tracking endpoints ═══

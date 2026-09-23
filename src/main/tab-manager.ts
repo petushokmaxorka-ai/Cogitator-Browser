@@ -63,6 +63,7 @@ export class TabManager {
   private activeTabId: string | null = null;
   private window: BrowserWindow | null = null;
   private sidebarOpen = false;
+  private sidebarWidth = SIDEBAR_WIDTH;
   private htmlFullscreenTabId: string | null = null;
 
   // ── Window Binding ──────────────────────────────────────
@@ -166,13 +167,19 @@ export class TabManager {
     this.updateBounds();
   }
 
+  setSidebarWidth(width: number): void {
+    if (!Number.isFinite(width) || width < 0) return;
+    this.sidebarWidth = Math.round(width);
+    this.updateBounds();
+  }
+
   private attachView(entry: TabEntry): void {
     const win = this.window;
     if (!isWindowLive(win) || !isViewLive(entry.view)) return;
 
     try {
       const bounds = win.getContentBounds();
-      const sidebarOffset = this.sidebarOpen ? SIDEBAR_WIDTH : 0;
+      const sidebarOffset = this.sidebarOpen ? this.sidebarWidth : 0;
 
       if (entry.tab.url.includes('cogitator://start')) {
         safeRemoveBrowserView(win, entry.view);
@@ -246,7 +253,7 @@ export class TabManager {
         if (!this.tabs.has(tab.id) || !isViewLive(view)) return;
         handler(...args);
       };
-      view.webContents.on(event, wrapped);
+      (view.webContents as NodeJS.EventEmitter).on(event, wrapped);
       entry.listeners.push({ event, handler: wrapped });
     };
 
@@ -554,7 +561,7 @@ export class TabManager {
     for (const { event, handler } of entry.listeners) {
       try {
         if (!entry.view.webContents.isDestroyed()) {
-          entry.view.webContents.removeListener(event, handler);
+          (entry.view.webContents as NodeJS.EventEmitter).removeListener(event, handler);
         }
       } catch {
         /* view already gone */
