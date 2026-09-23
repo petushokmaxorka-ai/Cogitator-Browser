@@ -93,12 +93,23 @@ function portOpen(host: string, port: number, timeoutMs = 600): Promise<boolean>
   });
 }
 
-async function rulesReachable(candidate: { rules: string; ports: number[] }): Promise<boolean> {
-  if (candidate.ports.length === 0) return false;
-  for (const port of candidate.ports) {
-    if (await portOpen('127.0.0.1', port)) return true;
-  }
-  return false;
+/** Probe every candidate port once, concurrently. This runs on the startup
+ *  path before the main window opens, and on Windows a refused loopback
+ *  connect only ends via the timeout (SYN retries), so sequential probes of
+ *  the 7 candidate ports would add seconds to every launch. */
+async function probeCandidatePorts(): Promise<Set<number>> {
+  const ports = [...new Set(CANDIDATES.flatMap((c) => c.ports))];
+  const open = new Set<number>();
+  await Promise.all(
+    ports.map(async (port) => {
+      if (await portOpen('127.0.0.1', port)) open.add(port);
+    }),
+  );
+  return open;
+}
+
+function rulesReachable(candidate: { ports: number[] }, openPorts: Set<number>): boolean {
+  return candidate.ports.some((port) => openPorts.has(port));
 }
 
 /** A listening port is not a working tunnel: a dead xray/clash egress kills
@@ -239,9 +250,10 @@ async function pickProxyRules(): Promise<{ rules: string; label: string; ports: 
     return { rules: envProxy, label: 'env', ports: [] };
   }
 
+  const openPorts = await probeCandidatePorts();
   for (const c of CANDIDATES) {
     if (c.label === 'env') continue;
-    if (!(await rulesReachable(c))) continue;
+    if (!rulesReachable(c, openPorts)) continue;
     if (!(await egressAlive(c))) continue;
     return { rules: c.rules, label: c.label, ports: c.ports };
   }
